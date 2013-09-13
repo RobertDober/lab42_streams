@@ -6,8 +6,7 @@ module Lab42
     attr_reader :head, :promise
 
     def each
-      yield head
-      t = tail
+      t = self
       loop do
         yield t.head
         t = t.tail
