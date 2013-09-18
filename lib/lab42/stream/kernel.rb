@@ -1,3 +1,4 @@
+require 'lab42/core/kernel'
 module Kernel
   def binop_streams op, stream1, stream2
     combine_streams stream1, stream2 do |e1, e2|
@@ -36,7 +37,7 @@ module Kernel
 
   def stream_by *args, &blk
     if blk
-      # cons_stream(*args){ stream_by( blk.(*args), &blk ) }
+      cons_stream(*args){ stream_by( blk.(*args), &blk ) }
     else
       rest = args.drop 1
       cons_stream( args.first ){ stream_by( sendmsg(*rest).(args.first), *rest ) }
