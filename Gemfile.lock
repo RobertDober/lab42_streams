@@ -3,9 +3,7 @@ GEM
   specs:
     coderay (1.0.9)
     diff-lcs (1.2.4)
-    forwarder19 (0.2.0)
-      lab419_core (~> 0.0.3)
-    lab419_core (0.0.7)
+    forwarder2 (0.2.0)
     method_source (0.8.2)
     pry (0.9.12.2)
       coderay (~> 1.0.5)
@@ -25,6 +23,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  forwarder19 (~> 0.2.0)
+  forwarder2
   pry
   rspec

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'forwarder19', '~> 0.2.0'
+gem 'forwarder2'
 
 group :development do
   gem "pry"
