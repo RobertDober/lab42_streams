@@ -7,6 +7,10 @@ module Lab42
       end
       def empty?; true end
       def head; raise StopIteration, "head called on empty stream" end
+
+      def map *args, &blk
+        self
+      end
       # I believe that this definition is sound, although it is an obvious pitfall
       # But falling into it once, means understanding streams better, well that is
       # my opinion now, we will see what promises the future will bring...

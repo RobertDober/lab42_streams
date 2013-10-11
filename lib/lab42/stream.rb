@@ -37,18 +37,31 @@ module Lab42
       }
     end
 
+    def map *args, &blk
+      raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
+      transform( blk || args )
+    end
+
     def tail
       promise.()
     end
 
     def to_stream; self end
 
+    def transform args
+      return transform_by_proc args unless Array === args
+      return transform_by_proc args.first if Proc === args.first
+      transform_by_proc sendmsg(*args)
+    end
+    def transform_by_proc prc
+      cons_stream( prc.(head) ){ tail.transform_by_proc prc }
+    end
     private
     def initialize h, t=nil, &tail
       @head    = h
       @promise = ( t || tail ).memoized
     end
-    
+
   end # class Stream
 
 end # module Lab42
