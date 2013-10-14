@@ -6,7 +6,7 @@ describe Lab42::Stream do
   let(:verify){->(result){
     expect( result.take N ).to eq(expected)
   }}
-  context 'function objects are recoginized', :wip do
+  context 'function objects are recoginized' do
     it "by stream_by" do
       verify.( stream_by 0, 1.fn.+ )
     end

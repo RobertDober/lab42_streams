@@ -5,6 +5,7 @@ require 'lab42/stream/proc'
 
 module Lab42
   class Stream
+    ConstraintError = Class.new RuntimeError
     include Enumerable
     attr_reader :head, :promise
 
@@ -49,6 +50,18 @@ module Lab42
       end
     end
 
+    def __inject_while__ ival, cond, red
+      raise ConstraintError unless cond.(ival)
+      s = self
+      loop do
+        new_val = red.(ival, s.head)
+        return ival unless cond.(new_val)
+        ival = new_val
+        s = s.tail
+        return ival if s.empty?
+      end
+    end
+
     def make_cyclic
       cons_stream( head ){
         tail.append( make_cyclic )
@@ -61,6 +74,10 @@ module Lab42
       transform_by_proc mk_proc( blk || args )
     end
 
+    def reduce_while cond, red=nil, &reducer
+      red ||= reducer
+      tail.__inject_while__ head, cond, red
+    end
     def tail
       promise.()
     end
