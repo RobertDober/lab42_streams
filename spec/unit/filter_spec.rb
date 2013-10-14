@@ -40,21 +40,6 @@ describe Lab42::Stream do
       end
     end
 
-    context "is truley lazy" do
-      let(:failing){finite_stream([1,2]) + cons_stream(3){raise RuntimeError}}
-      it "fails if forced" do
-        expect( ->{failing.take 4} ).to raise_error( RuntimeError )
-      end
-      it "does not fail if filtered" do
-        expect { failing.filter( 2.fn.> ) }.not_to raise_error
-      end
-      it "does not fail if filtered even if the next head fails" do
-        expect { failing.filter( 0.fn.> ) }.not_to raise_error
-      end
-
-
-      
-    end # context "is truley lazy"
   end # context :map
 
 end # describe Lab42::Stream

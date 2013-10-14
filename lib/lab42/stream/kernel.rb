@@ -6,10 +6,11 @@ module Kernel
     end
   end
 
-  def combine_streams s1, s2, &operation
+  def combine_streams s1, s2, op=nil, &operation
     return empty_stream if s1.empty? || s2.empty?
-    cons_stream operation.(s1.head, s2.head) do
-      combine_streams( s1.tail, s2.tail, &operation)
+    op ||= operation
+    cons_stream op.(s1.head, s2.head) do
+      combine_streams( s1.tail, s2.tail, op)
     end
   end
 
@@ -40,7 +41,11 @@ module Kernel
       cons_stream(*args){ stream_by( blk.(*args), &blk ) }
     else
       rest = args.drop 1
-      cons_stream( args.first ){ stream_by( sendmsg(*rest).(args.first), *rest ) }
+      if Method === rest.first 
+        cons_stream( args.first ){ stream_by( rest.first.(*([args.first] + rest.drop(1))), *rest ) }
+      else
+        cons_stream( args.first ){ stream_by( sendmsg(*rest).(args.first), *rest ) }
+    end
     end
   end
 end
