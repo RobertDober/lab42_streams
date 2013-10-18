@@ -2,7 +2,7 @@ require 'spec_helper'
 
 class Array
  def legal?; 
-   each_with_index.all?{ |e,i| !drop(i.succ).each_with_index.any?{ |f,j| p [e,f,i,j]; e==f || (f-e).abs == (j+1) }}
+   each_with_index.all?{ |e,i| !drop(i.succ).each_with_index.any?{ |f,j| e==f || (f-e).abs == (j+1) }}
  end
 end
 
@@ -20,12 +20,13 @@ end
 def queens size
   fill size, size
 end
-describe Lab42::Stream, :wip do
+
+describe Lab42::Stream do
 
   it "finds first solution" do
     expect(
       queens(5).head
-    ).to equal( [0,2,4,1,3] )
+    ).to eq( [0,2,4,1,3] )
   end
 
 end # describe Lab42::Stream

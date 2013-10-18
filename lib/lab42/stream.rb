@@ -50,6 +50,16 @@ module Lab42
       end
     end
 
+    def flatmap *args, &blk
+      if args.empty?
+        __flatmap__ blk
+      elsif args.size == 1 && args.first.respond_to?( :call )
+        __flatmap__ args.first
+      else
+        __flatmap__ sendmsg(*args)
+      end
+    end
+
     def __inject_while__ ival, cond, red
       raise ConstraintError unless cond.(ival)
       s = self
@@ -78,6 +88,7 @@ module Lab42
       red ||= reducer
       tail.__inject_while__ head, cond, red
     end
+
     def tail
       promise.()
     end
@@ -87,6 +98,16 @@ module Lab42
     def transform_by_proc prc
       cons_stream( prc.(head) ){ tail.transform_by_proc prc }
     end
+
+    def __flatmap__ a_proc
+      hh = a_proc.( head )
+      if hh.empty?
+        tail.__flatmap__ a_proc
+      else
+        cons_stream( hh.head ){ hh.tail + tail.__flatmap__( a_proc ) }
+      end
+    end
+
     private
     def initialize h, t=nil, &tail
         @head    = h

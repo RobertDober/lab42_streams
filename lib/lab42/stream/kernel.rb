@@ -36,6 +36,9 @@ module Kernel
     empty_stream
   end
 
+  def flatmap stream, *args, &blk
+    stream.flatmap( *args, &blk )
+  end
   def stream_by *args, &blk
     if blk
       cons_stream(*args){ stream_by( blk.(*args), &blk ) }

@@ -1,6 +1,7 @@
 module Lab42
   class Stream
     class Empty < Stream
+      # TODO: Implement all self returning methods with Forwarder
       def append other
         raise ArgumentError, "not a stream #{other}" unless self.class.superclass === other
         # ??? Is the to_stream message a good idea
@@ -21,6 +22,9 @@ module Lab42
       # my opinion now, we will see what promises the future will bring...
       def tail; self end
 
+
+      def flatmap *args, &blk; self end
+      def __flatmap__ a_proc; self end
 
       private
       def initialize; end
