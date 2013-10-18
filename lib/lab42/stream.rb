@@ -1,6 +1,9 @@
 require 'lab42/stream/empty'
 require 'lab42/stream/delayed'
 require 'lab42/stream/kernel'
+require 'lab42/stream/array'
+require 'lab42/stream/enumerable'
+require 'lab42/stream/hash'
 require 'lab42/stream/proc'
 
 module Lab42

@@ -1,7 +1,3 @@
-# Check if there is a bug 
-
-In case of `finite_stream([1,2]).take 3`
-
 # Implement Enumerable#to\_stream
 
 
