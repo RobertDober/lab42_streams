@@ -28,6 +28,21 @@ describe Lab42::Stream do
           {a: 1, b: 2}.to_stream.take 5
         ).to eq([{a: 1}, {b: 2}])
       end
+      it "from Enumerators" do
+        expect(
+          (1..5).to_enum.to_stream.take 5
+        ).to eq([*1..5])
+      end
+      it "from Enumerators" do
+        expect(
+          (1..5).to_enum.to_stream.take 5
+        ).to eq([*1..5])
+      end
+      it "from Lazy Enumerators" do
+        expect(
+          (1..5).lazy.to_stream.take 5
+        ).to eq([*1..5])
+      end
       
     end # context "from an Array"
   end # context :to_stream
