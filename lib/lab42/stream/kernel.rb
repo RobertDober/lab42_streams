@@ -39,6 +39,17 @@ module Kernel
   def flatmap stream, *args, &blk
     stream.flatmap( *args, &blk )
   end
+
+  # TODO: Reimplement with a cursor into streams to avoid
+  # the (potentially) costly array arithm in the tail def
+  def merge_streams *streams
+    s = streams.reject( &:empty? )
+    return empty_stream if s.empty?
+    cons_stream s.first.head do
+      merge_streams(*(s.drop(1) + [s.first.tail]))
+    end
+  end
+
   def stream_by *args, &blk
     if blk
       cons_stream(*args){ stream_by( blk.(*args), &blk ) }

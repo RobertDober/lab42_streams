@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lab42::Stream do 
+describe Lab42::Stream do
   let :s1 do
     finite_stream 1..3
   end

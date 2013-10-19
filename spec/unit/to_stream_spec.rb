@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Lab42::Stream do 
-  context :to_stream, :wip do
+  context :to_stream do
     context "from a stream" do 
       let(:ints){stream_by 0, :succ}
       it "returns itself" do
@@ -12,7 +12,7 @@ describe Lab42::Stream do
       end
     end # context "from a stream"
     
-    context "from other objects" do 
+    context "from other objects" do
       it "from arrays" do
         expect(
           %w{a b c}.to_stream.take 2

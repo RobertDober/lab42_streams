@@ -18,3 +18,4 @@ describe Lab42::Stream do
     end
   end # context 'function objects are recoginized'
 end # describe Lab42::Stream
+
