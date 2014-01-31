@@ -19,5 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'lab42_core', '~> 0.0.5'
 
   s.add_development_dependency 'pry', '~> 0.9.12'
-  s.add_development_dependency 'rspec', '~> 2.13.0'
+  s.add_development_dependency 'rspec', '~> 2.14.0'
 end

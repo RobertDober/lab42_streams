@@ -18,6 +18,14 @@ module Lab42
     end
     alias_method :+, :append
 
+
+    def combine_streams *args, &operation
+      op = args.shift unless self.class === args.first
+      raise ArgumentError, "Missing stream parameters" if args.empty?
+      op = mk_proc [ op || operation ]
+      __combine_streams__(op, args)
+    end
+
     def drop n = 1
       raise ArgumentError, "not a non negative number" if n < 0
       t = self
@@ -37,6 +45,14 @@ module Lab42
     end
 
     def empty?; false end
+
+    def inject_stream agg, *red, &reducer
+      if red.empty?
+        __inject__ agg, reducer
+      else
+        __inject__ agg, mk_proc( red )
+      end
+    end
 
     def filter *args, &blk
       # TODO: Get this check and a factory to create a proc for this into core
@@ -87,6 +103,14 @@ module Lab42
       transform_by_proc mk_proc( blk || args )
     end
 
+    def reduce_stream *red, &reducer
+      if red.empty?
+        __reduce__ reducer
+      else
+        __reduce__ mk_proc( red )
+      end
+    end
+
     def reduce_while cond, red=nil, &reducer
       red ||= reducer
       tail.__inject_while__ head, cond, red
@@ -102,6 +126,18 @@ module Lab42
       cons_stream( prc.(head) ){ tail.transform_by_proc prc }
     end
 
+    def __combine_streams__ op, args
+      return empty_stream if args.any?(&sendmsg(:empty?))
+      
+      new_head = op.(head, *args.map(&sendmsg(:head)))
+      cons_stream( new_head ){ tail.__combine_streams__(op, args.map(&sendmsg(:tail))) }
+    end
+
+    def __inject__ agg, a_proc
+      new_agg = a_proc.(agg, head)
+      cons_stream( new_agg ){ tail.__inject__ new_agg, a_proc }
+    end
+
     def __flatmap__ a_proc
       hh = a_proc.( head )
       if hh.empty?
@@ -111,10 +147,13 @@ module Lab42
       end
     end
 
+    def __reduce__ a_proc
+      tail.__inject__ head, a_proc
+    end
     private
     def initialize h, t=nil, &tail
-        @head    = h
-        @promise = ( t || tail ).memoized
+      @head    = h
+      @promise = ( t || tail ).memoized
     end
 
     # TODO: Use this from core/fn as soon as available

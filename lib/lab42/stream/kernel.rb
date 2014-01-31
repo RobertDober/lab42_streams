@@ -8,10 +8,7 @@ module Kernel
 
   def combine_streams s1, s2, op=nil, &operation
     return empty_stream if s1.empty? || s2.empty?
-    op ||= operation
-    cons_stream op.(s1.head, s2.head) do
-      combine_streams( s1.tail, s2.tail, op)
-    end
+    return s1.combine_streams( op, s2, &operation )
   end
 
   def cons_stream head, &tail
