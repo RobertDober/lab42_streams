@@ -1,5 +1,4 @@
-$:.unshift File.expand_path( "../../lib", __FILE__ )
-require "lab42/stream"
+require_relative "../lib/lab42/stream"
 
 PROJECT_ROOT = File.expand_path "../..", __FILE__
 Dir[File.join(PROJECT_ROOT,"spec/support/**/*.rb")].each {|f| require f}

@@ -1,7 +1,17 @@
+require 'forwarder'
+
 module Lab42
   class Stream
     class Empty < Stream
-      # TODO: Implement all self returning methods with Forwarder
+      extend Forwarder
+      # TODO replace with
+      # forward_all ..., as_result: :self
+      forward_all :flatmap, :__flatmap__,
+                  :filter, 
+                  :inject_stream, :__inject__, :reduce_stream,
+                  :make_cyclic, :map, :tail,
+         to_object: :self, as: :itself
+
       def append other
         raise ArgumentError, "not a stream #{other}" unless self.class.superclass === other
         # ??? Is the to_stream message a good idea
@@ -11,20 +21,11 @@ module Lab42
 
       def empty?; true end
 
-      def filter *args, &blk; self end
 
       def head; raise StopIteration, "head called on empty stream" end
 
-      def make_cyclic; self end
-      def map *args, &blk; self end
-      # I believe that this definition is sound, although it is an obvious pitfall
-      # But falling into it once, means understanding streams better, well that is
-      # my opinion now, we will see what promises the future will bring...
-      def tail; self end
-
-
-      def flatmap *args, &blk; self end
-      def __flatmap__ a_proc; self end
+      # TODO: Move this into lab42/core as Object#itself
+      def itself *args, &blk; self end
 
       private
       def initialize; end

@@ -1,10 +1,11 @@
-require 'lab42/stream/empty'
-require 'lab42/stream/delayed'
-require 'lab42/stream/kernel'
-require 'lab42/stream/array'
-require 'lab42/stream/enumerable'
-require 'lab42/stream/hash'
-require 'lab42/stream/proc'
+
+require_relative './stream/empty'
+require_relative './stream/delayed'
+require_relative './stream/kernel'
+require_relative './stream/array'
+require_relative './stream/enumerable'
+require_relative './stream/hash'
+require_relative './stream/proc'
 
 module Lab42
   class Stream

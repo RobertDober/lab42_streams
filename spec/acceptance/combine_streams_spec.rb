@@ -15,12 +15,14 @@ describe Lab42::Stream do
     end
   end # context "finite streams"
 
-  context "infinite streams", :wip do
-    def ints
-      cons_stream( 1 ){ combine_stream( ints, ints.tail, :+ ) }
+  context "infinite streams" do
+    def ints from=0
+      cons_stream( from ){ ints from.succ }
     end
-    it 'generates the ints' do
-      expect( ints.take 5 ).to eq([*2..6])
+    let(:squares){ combine_streams ints, ints, :*}
+    
+    it 'generates the square of ints' do
+      expect( squares.take 5 ).to eq([0, 1, 4, 9, 16])
     end
     
   end # context "infinite streams"
