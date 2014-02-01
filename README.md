@@ -6,6 +6,6 @@ Bringing Streams to the much lazier Ruby 2.0
 
 # Checking for some syntax
 
-```rspec
+```ruby rspec
     expect( 'hello' ).not_to be_empty
 ```
