@@ -1,22 +1,36 @@
 #!/usr/bin/env zsh
-
-export home_dir=$(pwd)
-export session_name=Lab42Stream
-
+export home_dir=$Lab42/streams
+export session_name='Lab42Streams'
+export console_command=pry
+export after_open_window='rvm use default@lab42streams --create'
+export after_open_session='rvm use default@lab42streams --create && bundle install'
 function main
 {
-        new_session
-        new_window 'vi'
-        open_vi
+    new_session
+
+    new_window vi
+    open_vi
+
+    new_window 'vi lib/lab42'
+    open_vi lib ':colorscheme morning'
+
+    new_window test
+    send_keys 'bundle exec rspec'
+
+    new_window 'vi spec'
+    open_vi spec ':colorscheme solarized' ':set background=light'
 
 
-        new_window 'vi lib'
-        open_vi lib
+    new_vi demo ':colorscheme molokai'
 
-        new_window 'spec'
+    new_window qed
 
-        new_window 'vi spec'
-        open_vi spec ':colorscheme solarized'
+    new_window console
+    send_keys 'pry'
+    send_keys 'require "lab42/options/auto_import"'
+}
+
+source $HOME/bin/tmux/tmux-commands.zsh
 
 }
 
