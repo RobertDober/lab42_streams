@@ -1,7 +1,10 @@
 require 'spec_helper'
+require 'lab42/core/fn'
 
 describe Lab42::Stream do
+
   let(:ints){cons_stream(0){combine_streams ints, const_stream(1), Fixnum.fm.+}}
+
   context "reduce_while" do 
     it "reduces while a condition is true" do
       expect(

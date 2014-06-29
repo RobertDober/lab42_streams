@@ -6,9 +6,12 @@ require_relative './stream/array'
 require_relative './stream/enumerable'
 require_relative './stream/hash'
 require_relative './stream/proc'
+require_relative './stream/class_methods'
 
 module Lab42
   class Stream
+    extend ClassMethods
+
     ConstraintError = Class.new RuntimeError
     include Enumerable
     attr_reader :head, :promise
@@ -23,7 +26,7 @@ module Lab42
     def combine_streams *args, &operation
       op = args.shift unless self.class === args.first
       raise ArgumentError, "Missing stream parameters" if args.empty?
-      op = mk_proc [ op || operation ]
+      op = operation.make_behavior op
       __combine_streams__(op, args)
     end
 
@@ -48,17 +51,21 @@ module Lab42
     def empty?; false end
 
     def inject_stream agg, *red, &reducer
-      if red.empty?
-        __inject__ agg, reducer
-      else
-        __inject__ agg, mk_proc( red )
-      end
+      __inject__ agg, reducer.make_behavior( *red )
+      # 2BDELETED
+      # if red.empty?
+      #   __inject__ agg, reducer
+      # else
+      #   __inject__ agg, mk_proc( red )
+      # end
     end
 
     def filter *args, &blk
-      # TODO: Get this check and a factory to create a proc for this into core
-      raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
-      filter_by_proc mk_proc( blk || args )
+      filter_by_proc blk.make_behavior( *args )
+    end
+
+    def reject *args, &blk
+      filter_by_proc blk.make_behavior( *args ).not
     end
 
     def filter_by_proc prc
@@ -66,7 +73,7 @@ module Lab42
         cons_stream(head){ tail.filter_by_proc prc }
       else
         # TODO: Replace this with Delayed Stream (1 off)
-        tail.filter_by_proc prc 
+        tail.filter_by_proc prc
       end
     end
 
@@ -101,15 +108,17 @@ module Lab42
     def map *args, &blk
       # TODO: Get this check and a factory to create a proc for this into core/fn
       raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
-      transform_by_proc mk_proc( blk || args )
+      transform_by_proc blk.make_behavior( *args )
     end
 
     def reduce_stream *red, &reducer
-      if red.empty?
-        __reduce__ reducer
-      else
-        __reduce__ mk_proc( red )
-      end
+      __reduce__ reducer.make_behavior( *red )
+      # 2BDELETED
+      # if red.empty?
+      #   __reduce__ reducer
+      # else
+      #   __reduce__ mk_proc( red )
+      # end
     end
 
     def reduce_while cond, red=nil, &reducer
@@ -129,7 +138,7 @@ module Lab42
 
     def __combine_streams__ op, args
       return empty_stream if args.any?(&sendmsg(:empty?))
-      
+
       new_head = op.(head, *args.map(&sendmsg(:head)))
       cons_stream( new_head ){ tail.__combine_streams__(op, args.map(&sendmsg(:tail))) }
     end
@@ -157,13 +166,12 @@ module Lab42
       @promise = ( t || tail ).memoized
     end
 
-    # TODO: Use this from core/fn as soon as available
-    def mk_proc args
-      return args if Proc === args
-      raise ArgumentError, "neither a Proc nor an array of args for Kernel#sendmsg" unless Array === args
-      return args.first if Proc === args.first || Method === args.first
-      sendmsg(*args)
-    end
+    # def mk_proc args
+    #   return args if Proc === args
+    #   raise ArgumentError, "neither a Proc nor an array of args for Kernel#sendmsg" unless Array === args
+    #   return args.first if Proc === args.first || Method === args.first
+    #   sendmsg(*args)
+    # end
 
   end # class Stream
 
