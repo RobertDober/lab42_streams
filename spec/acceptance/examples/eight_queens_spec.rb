@@ -11,11 +11,15 @@ def expand pos, size
     .map{ |i|
       pos + [i]
     }
-    .filter :legal?
+    .filter( :legal? )
 end
 def fill k, size
   return finite_stream [[]] if k.zero?
-  fill( k-1, size ).flatmap{ |pos| expand( pos, size ) }
+  k_1 = fill k-1, size
+
+  k_1.flatmap do |pos| 
+    expand(pos, size)
+  end 
 end
 def queens size
   fill size, size
@@ -23,6 +27,11 @@ end
 
 describe Lab42::Stream do
 
+  it "debug" do
+    
+    queens 5
+    
+  end
   it "finds first solution" do
     expect(
       queens(5).head

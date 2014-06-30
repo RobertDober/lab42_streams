@@ -8,6 +8,9 @@ require_relative './stream/hash'
 require_relative './stream/proc'
 require_relative './stream/class_methods'
 
+# TODO: This should rather be implemented in lab_42/core/fn
+require_relative './stream/kernel/extensions'
+
 module Lab42
   class Stream
     extend ClassMethods
@@ -26,8 +29,7 @@ module Lab42
     def combine_streams *args, &operation
       op = args.shift unless self.class === args.first
       raise ArgumentError, "Missing stream parameters" if args.empty?
-      op = operation.make_behavior op
-      __combine_streams__(op, args)
+      __combine_streams__ operation.make_behavior( op ), args
     end
 
     def drop n = 1
@@ -52,12 +54,6 @@ module Lab42
 
     def inject_stream agg, *red, &reducer
       __inject__ agg, reducer.make_behavior( *red )
-      # 2BDELETED
-      # if red.empty?
-      #   __inject__ agg, reducer
-      # else
-      #   __inject__ agg, mk_proc( red )
-      # end
     end
 
     def filter *args, &blk
@@ -113,12 +109,6 @@ module Lab42
 
     def reduce_stream *red, &reducer
       __reduce__ reducer.make_behavior( *red )
-      # 2BDELETED
-      # if red.empty?
-      #   __reduce__ reducer
-      # else
-      #   __reduce__ mk_proc( red )
-      # end
     end
 
     def reduce_while cond, red=nil, &reducer

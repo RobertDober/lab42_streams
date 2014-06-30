@@ -9,7 +9,6 @@ Here are two demonstrations of that concept:
 ### Infinite Streams
 
 ```ruby
-    require 'pry'
     def fibs a=0, b=1
       cons_stream a do
         fibs b, a+b
@@ -70,32 +69,29 @@ A different way to look at this is in the following application
 ```
 
 
-
-
 There is absolutely no performance penalty here, when we eventually realize the stream with `take`, and only
 then, we will execute the transformations.
 
-(1) Some might argue that it is a `cons-cell` abstraction, and they would not
-get any argument from me.
 
+And as we operate on **infinite** streams it becomes obvious that the implementation must delay up to the end.
 
 ### Memoization
 
-It is of the uttermost importance to assure that the promise is only realized once, this is done via memoization
-and allows the following defintion of the fibonacci numbers to have `O(n)` runtime.
+The fourth point to know about `Streams` is that:
+
+* All promises are **memoized**. 
+
+
+
+Only for that reason the following naïve, but elegant implementation of the fibonacci sequence has O(N) runtime
+characteristics, and the result can be computed:
 
 ```ruby
 
-    def add_streams s1, s2
-      return empty_stream if s1.empty? || s2.empty?
-      cons_stream s1.head + s2.head do
-        add_streams s1.tail, s2.tail
-      end
-    end
     fibs1 = cons_stream(0){
       cons_stream(1){
         # Without memoization we would evaluate the fibs call tree twice
-        add_streams fibs1, fibs1.tail
+        combine_streams fibs1, fibs1.tail, :+
       }
     }
 
