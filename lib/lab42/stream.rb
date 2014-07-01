@@ -42,79 +42,7 @@ module Lab42
       end
     end
 
-    def each
-      t = self
-      loop do
-        yield t.head
-        t = t.tail
-      end
-    end
-
     def empty?; false end
-
-    def inject_stream agg, *red, &reducer
-      __inject__ agg, reducer.make_behavior( *red )
-    end
-
-    def filter *args, &blk
-      filter_by_proc blk.make_behavior( *args )
-    end
-
-    def reject *args, &blk
-      filter_by_proc blk.make_behavior( *args ).not
-    end
-
-    def filter_by_proc prc
-      if prc.(head)
-        cons_stream(head){ tail.filter_by_proc prc }
-      else
-        # TODO: Replace this with Delayed Stream (1 off)
-        tail.filter_by_proc prc
-      end
-    end
-
-    def flatmap *args, &blk
-      if args.empty?
-        __flatmap__ blk
-      elsif args.size == 1 && args.first.respond_to?( :call )
-        __flatmap__ args.first
-      else
-        __flatmap__ sendmsg(*args)
-      end
-    end
-
-    def __inject_while__ ival, cond, red
-      raise ConstraintError unless cond.(ival)
-      s = self
-      loop do
-        new_val = red.(ival, s.head)
-        return ival unless cond.(new_val)
-        ival = new_val
-        s = s.tail
-        return ival if s.empty?
-      end
-    end
-
-    def make_cyclic
-      cons_stream( head ){
-        tail.append( make_cyclic )
-      }
-    end
-
-    def map *args, &blk
-      # TODO: Get this check and a factory to create a proc for this into core/fn
-      raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
-      transform_by_proc blk.make_behavior( *args )
-    end
-
-    def reduce_stream *red, &reducer
-      __reduce__ reducer.make_behavior( *red )
-    end
-
-    def reduce_while cond, red=nil, &reducer
-      red ||= reducer
-      tail.__inject_while__ head, cond, red
-    end
 
     def tail
       promise.()
@@ -133,11 +61,6 @@ module Lab42
       cons_stream( new_head ){ tail.__combine_streams__(op, args.map(&sendmsg(:tail))) }
     end
 
-    def __inject__ agg, a_proc
-      new_agg = a_proc.(agg, head)
-      cons_stream( new_agg ){ tail.__inject__ new_agg, a_proc }
-    end
-
     def __flatmap__ a_proc
       hh = a_proc.( head )
       if hh.empty?
@@ -147,9 +70,6 @@ module Lab42
       end
     end
 
-    def __reduce__ a_proc
-      tail.__inject__ head, a_proc
-    end
     private
     def initialize h, t=nil, &tail
       @head    = h

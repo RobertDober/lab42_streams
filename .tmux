@@ -26,8 +26,7 @@ function main
     new_window qed
 
     new_window console
-    send_keys 'pry -I./lib'
-    send_keys 'require "lab42/stream/auto_import"'
+    send_keys 'pry -I./lib -rlab42/stream/auto_import'
 }
 
 source $HOME/bin/tmux/tmux-commands.zsh

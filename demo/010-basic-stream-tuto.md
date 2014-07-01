@@ -13,7 +13,7 @@ Here are two demonstrations of that concept:
       cons_stream a do
         fibs b, a+b
       end
-    end 
+    end
 
     fibs.drop(1000).head.assert == 43466557686937456435688527675040625802564660517371780402481729089536555417949051890403879840079255169295922593080322634775209689623239873322471161642996440906533187938298969649928516003704476137795166849228875
 ```
@@ -46,7 +46,7 @@ While for example the following code would be terribly inefficent
 the following stream based code is not.
 
 ```ruby
-  
+
      translation = { [true,true] => "fizzbuzz", [true, false] => "fizz", [false, true] => "buzz" }
      integers    = Stream.iterate 0, :succ
      fizzbuzz    = integers
@@ -79,7 +79,7 @@ And as we operate on **infinite** streams it becomes obvious that the implementa
 
 The fourth point to know about `Streams` is that:
 
-* All promises are **memoized**. 
+* All promises are **memoized**.
 
 
 
@@ -103,7 +103,15 @@ characteristics, and the result can be computed:
 
 Finite Streams are implemented the same way LISP imlements lists, by providing an _End_Marker_. What is `nil` in LISP
 is `empty_stream` in Ruby. As a matter of fact the `empty_stream` method returns a singleton called `Lab42::Stream::Empty` which
-is also accessible via `EmptyStream` if you required the lib with `require 'lab42/stream/auto_import'` as has been done here.
+is also accessible via `EmptyStream` if you required the lib with `require 'lab42/stream/auto_import'` which is true for the demos.
 
+Here is an example of a finite stream
 
-The following is the
+```ruby
+    digits = finite_stream( 0..9 )
+
+    digits.drop(9).head.assert == 9
+    digits.drop(10).assert.empty?
+    digits.drop(10).assert == EmptyStream
+```
+

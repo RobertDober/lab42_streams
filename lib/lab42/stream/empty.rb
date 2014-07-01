@@ -1,5 +1,7 @@
 require 'forwarder'
 
+require_relative 'empty/enumerable'
+
 module Lab42
   class Stream
     class Empty < Stream
@@ -8,7 +10,7 @@ module Lab42
       # forward_all ..., as_result: :self
       forward_all :flatmap, :__flatmap__,
                   :filter, 
-                  :inject_stream, :__inject__, :reduce_stream,
+                  :inject_stream, :__inject__, :reduce,
                   :make_cyclic, :map, :tail,
          to_object: :self, as: :itself
 
@@ -28,7 +30,6 @@ module Lab42
       def itself *args, &blk; self end
 
       private
-      def initialize; end
 
       def self.new
         @__instance__ ||= allocate
@@ -38,6 +39,7 @@ module Lab42
 
     module ::Kernel
       def empty_stream; Empty.new end
+      Lab42::Stream::EmptyStream = empty_stream
     end # module ::Kernel
   end # class Stream
 end # module Lab42

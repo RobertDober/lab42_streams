@@ -6,6 +6,6 @@ An excellent introduction into `Streams` can be found [here](http://ocw.mit.edu/
 
 
 
-Please see the [QED](http://rubyworks.github.io/qed/) demos [here](https://github.com/RobertDober/lab42_streams/blob/master/demo/010-basic-stream-tuto.md)
+Please see the [QED](http://rubyworks.github.io/qed/) demos [here](https://github.com/RobertDober/lab42_streams/blob/master/demo)
 
 for details.

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lab42::Stream, :wip do
+describe Lab42::Stream do
   context "take_while" do 
     context :infinite_streams do 
       let(:ints){stream_by 0, :succ}
