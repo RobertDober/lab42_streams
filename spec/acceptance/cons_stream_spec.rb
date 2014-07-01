@@ -10,9 +10,6 @@ describe Lab42::Stream do
         it "to an array" do
           expect( subject.to_a ).to eq( [1] )
         end
-        it "to a lazy enumerator" do
-          expect( subject.lazy ).to be_kind_of( Enumerator::Lazy )
-        end
       end # context "which can be converted"
     end # context "basic behavior"
   end 

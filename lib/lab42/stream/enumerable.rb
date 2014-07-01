@@ -6,6 +6,28 @@ module Lab42
   class Stream
     module Enumerable
 
+      def drop_until *bhv, &blk
+        bhv = blk.make_behavior( *bhv )
+        s = self
+        loop do
+          return s if bhv.(s.head)
+          s = s.tail
+        end
+        empty_stream
+      end
+
+      # N.B. Not implemented as drop_until( bhv.not )
+      # for performance reasons
+      def drop_while *bhv, &blk
+        bhv = blk.make_behavior( *bhv )
+        s = self
+        loop do
+          return s unless bhv.(s.head)
+          s = s.tail
+        end
+        empty_stream
+      end
+
       def each
         t = self
         loop do
@@ -14,8 +36,9 @@ module Lab42
         end
       end
 
-      def reduce red, &reducer
-        __reduce__ reducer.make_behavior( *red )
+      def reduce red=nil, &reducer
+        red = reducer.make_behavior( red )
+        tail.__inject__ head, red
       end
 
       def inject agg, *red, &reducer
@@ -23,20 +46,11 @@ module Lab42
       end
 
       def filter *args, &blk
-        filter_by_proc blk.make_behavior( *args )
+        __filter__ blk.make_behavior( *args )
       end
 
       def reject *args, &blk
-        filter_by_proc blk.make_behavior( *args ).not
-      end
-
-      def filter_by_proc prc
-        if prc.(head)
-          cons_stream(head){ tail.filter_by_proc prc }
-        else
-          # TODO: Replace this with Delayed Stream (1 off)
-          tail.filter_by_proc prc
-        end
+        __filter__ blk.make_behavior( *args ).not
       end
 
       def flatmap *args, &blk
@@ -49,17 +63,20 @@ module Lab42
         end
       end
 
-      def __inject_while__ ival, cond, red
-        raise ConstraintError unless cond.(ival)
-        s = self
-        loop do
-          new_val = red.(ival, s.head)
-          return ival unless cond.(new_val)
-          ival = new_val
-          s = s.tail
-          return ival if s.empty?
+      def take_while *bhv, &blk
+        bhv = blk.make_behavior( *bhv )
+        x = []
+        each do | ele |
+          return x unless bhv.( ele )
+          x << ele
         end
+        x
       end
+
+      def to_a
+        take_while :true
+      end
+      alias_method :entries, :to_a
 
       def make_cyclic
         cons_stream( head ){
@@ -89,28 +106,37 @@ module Lab42
         x
       end
 
-      def take_while *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
-        x = []
-        each do | ele |
-          return x unless bhv.( ele )
-          x << ele
-        end
-        x
-      end
 
-      def to_a
-        take_while :true
+      def __filter__ a_proc
+        if a_proc.( head )
+          cons_stream( head ){ tail.__filter__ a_proc } 
+        else
+          tail.__filter__ a_proc
+        end
       end
-      alias_method :entries, :to_a
 
       def __inject__ agg, a_proc
         new_agg = a_proc.(agg, head)
+        tail.__inject__ new_agg, a_proc
+      end
+
+      def __inject_while__ ival, cond, red
+        raise ConstraintError unless cond.(ival)
+        s = self
+        loop do
+          new_val = red.(ival, s.head)
+          return ival unless cond.(new_val)
+          ival = new_val
+          s = s.tail
+          return ival if s.empty?
+        end
+      end
+
+      def __scan__ agg, a_proc
+        new_agg = a_proc.(agg, head)
         cons_stream( new_agg ){ tail.__inject__ new_agg, a_proc }
       end
-      def __reduce__ a_proc
-        tail.__inject__ head, a_proc
-      end
+
     end # module Enumerable
   end # class Stream
 end # module Lab42

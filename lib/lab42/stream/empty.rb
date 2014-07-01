@@ -6,12 +6,13 @@ module Lab42
   class Stream
     class Empty < Stream
       extend Forwarder
-      # TODO replace with
-      # forward_all ..., as_result: :self
-      forward_all :flatmap, :__flatmap__,
-                  :filter, 
-                  :inject_stream, :__inject__, :reduce,
-                  :make_cyclic, :map, :tail,
+      # It is the nature of the EmptyStream instance to return itself for a plethora of methods
+      # this can be expressed as follows:
+      forward_all :drop, :drop_unitl, :drop_while, 
+                  :flatmap, :__flatmap__, :filter, :__filter__, 
+                  :inject_stream, :__inject__, 
+                  :make_cyclic, :map,
+                  :reduce,
          to_object: :self, as: :itself
 
       def append other
@@ -25,6 +26,11 @@ module Lab42
 
 
       def head; raise StopIteration, "head called on empty stream" end
+      def tail; raise StopIteration, "tail called on empty stream" end
+
+
+      def inject *args; args.first end
+      alias_method :__inject__, :inject
 
       # TODO: Move this into lab42/core as Object#itself
       def itself *args, &blk; self end
