@@ -86,3 +86,60 @@ it very clear that we need a much richer API in order to express algorithms with
 and potent way...
 
 ### Convenience API
+
+#### finite_stream Methods
+
+The above code would already be much simple if we could avoid the cascades of blocks we do not need
+as we provide already existing objects. This can be done by boxing these objects into an `Enumerable` instance
+and passing it into the `finite_stream` factory.
+
+```ruby
+    s = finite_stream [nil, 42]
+
+    s.head.assert.nil?
+    s.tail.head.assert == 42
+    s.tail.tail.assert.empty?
+```
+
+Alternatively we can use `to_a`, its alias `entries` or the recursive `force_all`  method to get an array back out
+of the **finite** stream.
+
+
+```ruby
+    s.to_a.assert == [nil, 42]
+    s.entries.assert == [nil, 42]
+    s.force_all.assert == [nil, 42]
+```
+
+
+And let us not forget the most finite of all finite streams, the empty one:
+
+```ruby
+    empty_stream.to_a.assert == []
+    empty_stream.entries.assert == []
+    empty_stream.force_all.assert == []
+    
+```
+
+
+##### force_all
+
+`force_all` descends into streams if elements are streams, meaning that the following to streams have the same return
+value for an invocation of `force_all`
+
+```ruby
+    s1 = finite_stream [ [1,2,3,4] ]
+    s2 = finite_stream [ s1 ]
+    s1.force_all.assert == [ [1,2,3,4 ] ]
+    s2.force_all.assert == [[ [1,2,3,4 ] ]]
+```
+
+`force_all` also detects recursions and avoids to descend into them
+
+```ruby
+    s1 = finite_stream [ 1, s1 ]
+
+    s1.force_all.assert == [ 1, [[1,2,3,4]] ]
+```
+
+

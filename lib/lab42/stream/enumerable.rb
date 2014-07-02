@@ -36,6 +36,33 @@ module Lab42
         end
       end
 
+      def each_without_loops
+        visited = {}
+        t = self
+        loop do
+          h = t.head
+          yield h
+          visited[ t.object_id ] = true
+          t = t.tail
+          return if visited[t.object_id]
+        end
+      end
+
+      def force_all cache={}
+        x = []
+        each_without_loops do | ele |
+          if self.class === ele
+            if ! cache[ele.object_id]
+              cache[ele.object_id] = true
+              x << ele.force_all( cache )
+            end
+          else
+            x << ele
+          end
+        end
+        x
+      end
+
       def reduce red=nil, &reducer
         red = reducer.make_behavior( red )
         tail.__inject__ head, red
