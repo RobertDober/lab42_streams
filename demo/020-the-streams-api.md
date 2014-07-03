@@ -184,6 +184,8 @@ The following methods can savely be invoked on inifinite streams too.
 
 ##### The Classic Enumerable API
 
+###### take\* methods
+
 In order to be able to better demonstrate the effect of the application on inifinite streams
 we start with the `take*` methods.
 
