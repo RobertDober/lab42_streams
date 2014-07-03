@@ -82,16 +82,17 @@ module Lab42
 
       def flatmap *args, &blk
         __flatmap__ blk.make_behavior( *args )
-        # 2BDELETED when tests pass
-        # if args.empty?
-        #   __flatmap__ blk
-        # elsif args.size == 1 && args.first.respond_to?( :call )
-        #   __flatmap__ args.first
-        # else
-        #   __flatmap__ sendmsg(*args)
-        # end
       end
 
+      def take_until *bhv, &blk
+        bhv = blk.make_behavior( *bhv )
+        x = []
+        each do | ele |
+          return x if bhv.( ele )
+          x << ele
+        end
+        x
+      end
       def take_while *bhv, &blk
         bhv = blk.make_behavior( *bhv )
         x = []

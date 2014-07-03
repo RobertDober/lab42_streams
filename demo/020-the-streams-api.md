@@ -118,7 +118,6 @@ And let us not forget the most finite of all finite streams, the empty one:
     empty_stream.to_a.assert == []
     empty_stream.entries.assert == []
     empty_stream.force_all.assert == []
-    
 ```
 
 
@@ -140,6 +139,73 @@ value for an invocation of `force_all`
     s1 = finite_stream [ 1, s1 ]
 
     s1.force_all.assert == [ 1, [[1,2,3,4]] ]
+```
+
+##### Inject and Reduce
+
+As `inject` and `reduce` force all elements they too, are limited to finite streams, unless of course you have
+plenty of time (and potentially plenty of space).
+
+```ruby
+    digits = finite_stream 0..9
+    sum    = digits.reduce :+
+    sum.assert == 45
+
+    augmented = digits.inject 10, :+
+    augmented.assert == 55
+```
+
+Of course you can provide a block or a lambda
+
+```ruby
+    # A lambda
+    digits.reduce( Fixnum.fm.+ ).assert == 45
+    # A block
+    digits.inject(10){|a, e| a+e }.assert == 55
+```
+
+###### Edge Cases
+
+The behavior of the edge cases for zero and one element streams are inispired by
+the behavior of Ruby's Enumerable.
+
+```ruby
+    [].reduce{|a,e| some_nonexisting_method }.assert.nil?
+    # and thus, as empty_stream carries the role of nil.
+    empty_stream.reduce(:some_nonexisting_method).assert.empty?
+
+    [].inject(42){}.assert == 42
+    empty_stream.inject( 42, :non_existing_method ).assert == 42
+```
+
+#### General Stream Methods
+
+The following methods can savely be invoked on inifinite streams too.
+
+##### The Classic Enumerable API
+
+In order to be able to better demonstrate the effect of the application on inifinite streams
+we start with the `take*` methods.
+
+The non negative integers will give us a perfect example of an infinite stream, with which
+about everybody is quite familiar.
+
+```ruby
+    ints = iterate 0, :succ
+
+    ints.take.assert == [0]
+    ints.take(5).assert == [*0..4]
+    ints.take_while{ |a| a < 2 }.assert == [0, 1]
+   
+    ints.take_until( :>, 9 ).assert == [*0..9]
+```
+
+
+It is important to remember that streams are immutable, and thus of corse the following still holds
+
+```ruby
+    ints.drop(5).head.assert == 5
+    ints.head.assert.zero?
 ```
 
 

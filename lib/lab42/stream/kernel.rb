@@ -21,7 +21,7 @@ module Kernel
 
   def cyclic_stream *args
     args = args.first if
-      args.size == 1 && Enumerable === args.first
+    args.size == 1 && Enumerable === args.first
 
     finite_stream( args ).make_cyclic
   end
@@ -47,16 +47,17 @@ module Kernel
     end
   end
 
-  def stream_by *args, &blk
+  def iterate *args, &blk
     if blk
-      cons_stream(*args){ stream_by( blk.(*args), &blk ) }
+      cons_stream(*args){ iterate( blk.(*args), &blk ) }
     else
       rest = args.drop 1
       if Method === rest.first 
-        cons_stream( args.first ){ stream_by( rest.first.(*([args.first] + rest.drop(1))), *rest ) }
+        cons_stream( args.first ){ iterate( rest.first.(*([args.first] + rest.drop(1))), *rest ) }
       else
-        cons_stream( args.first ){ stream_by( sendmsg(*rest).(args.first), *rest ) }
-    end
+        cons_stream( args.first ){ iterate( sendmsg(*rest).(args.first), *rest ) }
+      end
     end
   end
+  alias_method :stream_by, :iterate
 end

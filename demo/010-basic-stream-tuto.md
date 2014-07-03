@@ -2,7 +2,7 @@
 
 ## Basic Stream Tutorial
 
-Streams are lazy lists, or for the purists, lazy cons cells (well the tail/cdr is lazy, the head/car is not).
+Streams are lazy, immutable lists, or for the purists, lazy cons cells (well the tail/cdr is lazy, the head/car is not).
 
 Here are two demonstrations of that concept:
 

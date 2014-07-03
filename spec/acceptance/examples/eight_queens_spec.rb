@@ -40,7 +40,7 @@ def queens size
 end
 
 describe Lab42::Stream do
-  context "N Queens", :wip do
+  context "N Queens" do
     context 'the 3 queens problem' do 
       it 'has no solution' do
         expect( queens(3) ).to be_empty
@@ -70,7 +70,7 @@ describe Lab42::Stream do
         end
       end # context 'first row'
 
-      context 'first two rows', :wip do
+      context 'first two rows' do
         subject do
           fill( 2, 4 ).to_a
         end
