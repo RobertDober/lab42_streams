@@ -81,13 +81,15 @@ module Lab42
       end
 
       def flatmap *args, &blk
-        if args.empty?
-          __flatmap__ blk
-        elsif args.size == 1 && args.first.respond_to?( :call )
-          __flatmap__ args.first
-        else
-          __flatmap__ sendmsg(*args)
-        end
+        __flatmap__ blk.make_behavior( *args )
+        # 2BDELETED when tests pass
+        # if args.empty?
+        #   __flatmap__ blk
+        # elsif args.size == 1 && args.first.respond_to?( :call )
+        #   __flatmap__ args.first
+        # else
+        #   __flatmap__ sendmsg(*args)
+        # end
       end
 
       def take_while *bhv, &blk
@@ -114,8 +116,13 @@ module Lab42
       def map *args, &blk
         # TODO: Get this check and a factory to create a proc for this into core/fn
         raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
-        transform_by_proc blk.make_behavior( *args )
+        __map__ blk.make_behavior( *args )
       end
+
+    def __map__ prc
+      cons_stream( prc.(head) ){ tail.__map__ prc }
+    end
+
 
       def reduce_while cond, red=nil, &reducer
         red ||= reducer

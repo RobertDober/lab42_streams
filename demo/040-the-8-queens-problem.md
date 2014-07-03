@@ -55,7 +55,7 @@ Here is a very elegant example as taken from the cannonical [Structure and Inter
 And now we can take advantage of that to get the first solution of the classic 8-queens problem
 
 ```ruby
-    queens( 5 ).to_a.assert == []
+    queens( 8 ).head.assert.assert == [0, 4, 7, 5, 2, 6, 1, 3]
 ```
 
 

@@ -50,10 +50,6 @@ module Lab42
 
     def to_stream; self end
 
-    def transform_by_proc prc
-      cons_stream( prc.(head) ){ tail.transform_by_proc prc }
-    end
-
     def __combine_streams__ op, args
       return empty_stream if args.any?(&sendmsg(:empty?))
 
@@ -62,6 +58,8 @@ module Lab42
     end
 
     def __flatmap__ a_proc
+      # require 'pry'
+      # binding.pry
       hh = a_proc.( head )
       if hh.empty?
         tail.__flatmap__ a_proc

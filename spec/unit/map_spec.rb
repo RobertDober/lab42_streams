@@ -40,4 +40,20 @@ describe Lab42::Stream do
     end
   end # context :map
 
+  context 'Regression on end of stream' do
+    subject do
+      (1..2).to_stream.map :succ
+    end
+    
+    it 'expands to an array' do
+      expect( subject.to_a ).to eq [2, 3]
+    end
+
+    it 'does this many times' do
+      3.times do
+        expect( subject.to_a ).to eq [2, 3]
+      end
+    end
+  end # context 'Regression on end of stream'
+
 end # describe Lab42::Stream

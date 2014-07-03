@@ -11,7 +11,7 @@ module Lab42
       forward_all :drop, :drop_unitl, :drop_while, 
                   :flatmap, :__flatmap__, :filter, :__filter__, 
                   :inject_stream, :__inject__, 
-                  :make_cyclic, :map,
+                  :make_cyclic, :map, :__map__,
                   :reduce,
          to_object: :self, as: :itself
 

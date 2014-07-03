@@ -3,22 +3,26 @@ require 'lab42/core/fn'
 
 describe Lab42::Stream do 
   context :flatmap do
-    let(:doubler){
+    let(:tripler){
       -> ele do
-        finite_stream [ele, ele]
+        finite_stream [ele, ele, ele]
       end
     }
-    let(:doubled){[1,1,2,2,3,3]}
+    let(:tripled){[1,1,1,2,2,2,3,3,3]}
+    let(:ts){finite_stream( 1..3 ).flatmap( tripler )}
+
     it "flattens one level" do
       expect(
-        finite_stream( 1..3 ).flatmap(doubler).to_a
-      ).to eq(doubled)
+        ts.to_a
+      ).to eq(tripled)
     end
-    it "uses a minimal protocol on the result of the operation" do
-      expect(
-        flatmap( finite_stream( 1..3 ) ){ |e| finite_stream [e, e] }.to_a
-      ).to eq( doubled )
+
+    it "REGRESSION:can be forced many times" do
+      3.times do
+        expect( ts.to_a ).to eq tripled
+      end
     end
   end # context :flatmap
+
 
 end # describe Lab42::Stream
