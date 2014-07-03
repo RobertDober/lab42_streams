@@ -189,6 +189,9 @@ The following methods can savely be invoked on inifinite streams too.
 In order to be able to better demonstrate the effect of the application on inifinite streams
 we start with the `take*` methods.
 
+The `take*` methods take a number of elements, or elements fullfilling a condition and return
+them as an array.
+
 The non negative integers will give us a perfect example of an infinite stream, with which
 about everybody is quite familiar.
 
@@ -202,6 +205,17 @@ about everybody is quite familiar.
     ints.take_until( :>, 9 ).assert == [*0..9]
 ```
 
+###### drop\* methods
+
+The `drop*` methods return a stream from which a number of elements or elements according to a condition have been removed:
+
+```ruby
+    ints.drop.head.assert == 1
+    ints.drop(5).head.assert == 5
+    ints.drop_while(:<, 5).head.assert == 5
+    ints.drop_until{ |x| x==5 }.head.assert == 5
+```
+
 
 It is important to remember that streams are immutable, and thus of corse the following still holds
 
@@ -209,5 +223,35 @@ It is important to remember that streams are immutable, and thus of corse the fo
     ints.drop(5).head.assert == 5
     ints.head.assert.zero?
 ```
+
+
+###### map, filter (reject) and flatmap
+
+There are actually two, ways to transform the stream of non negative integers to the stream of non negative
+even integers.
+
+One can either, rject the odds...
+
+```ruby
+    ints.reject(:odd?).take(5).assert == [0, 2, 4, 6, 8]
+```
+
+which is identical to filter the evens
+
+```ruby
+    ints.filter(:even?).take(5).assert == [0, 2, 4, 6, 8]
+```
+
+Or one can simply double the stream...
+
+```ruby
+    ints.map(:*, 2).take(5).assert == [0, 2, 4, 6, 8]
+```
+
+Flatmap is an intersting beast, that had made it into `Enumerable`  in the meantime too. It does not only map the elements
+of a stream, but expects, that all elements are mapped to a **finite** stream which it expands to the result.
+
+This can be very useful as one can see in the [8 Queens Problem](040-the-8-queens-problem.md) demo file. 
+
 
 
