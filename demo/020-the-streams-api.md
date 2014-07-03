@@ -201,7 +201,7 @@ about everybody is quite familiar.
     ints.take.assert == [0]
     ints.take(5).assert == [*0..4]
     ints.take_while{ |a| a < 2 }.assert == [0, 1]
-   
+
     ints.take_until( :>, 9 ).assert == [*0..9]
 ```
 
@@ -251,7 +251,58 @@ Or one can simply double the stream...
 Flatmap is an intersting beast, that had made it into `Enumerable`  in the meantime too. It does not only map the elements
 of a stream, but expects, that all elements are mapped to a **finite** stream which it expands to the result.
 
-This can be very useful as one can see in the [8 Queens Problem](040-the-8-queens-problem.md) demo file. 
+This can be very useful as one can see in the [8 Queens Problem](040-the-8-queens-problem.md) demo file.
 
 
+A very basic example to give a first understanding:
 
+```ruby
+  # Represent each int n, as a finite stream of n "I"s, followed by an end marker "."
+  def representation n
+    finite_stream %w{I} * n + %w{.}
+  end
+
+  ints
+    .flatmap{ |n| representation n }
+    .drop(3)
+    .take(10).assert == %W{ I I . I I I . I I I }
+
+```
+
+###### Merging
+
+Starting from our cannonical `ints` again, we will show how to merge infinite streams together
+
+```ruby
+    evens = ints.map :*, 2
+    odds  = evens.map :succ
+
+    evens.take(5).assert == [0, 2, 4, 6, 8]
+    odds.take(5).assert == [1, 3, 5, 7, 9]
+
+    numbas = merge_streams evens, odds
+    numbas.take(5).assert == [*0..4]
+```
+
+`merge_stream` was **not** concieved as a `Stream` instance method by choice, as all parameters have the same role.
+
+
+streams of unequal length can be merged together too:
+
+```ruby
+    letters = finite_stream %W{a b c}
+    digits  = finite_stream 1..4
+    
+    merge_streams( letters, digits )
+      .to_a
+      .assert == [ "a", 1, "b", 2, "c", 3, 4 ]
+```
+
+and that goes for a mixture of finite and infinite streams too.
+
+```ruby
+    
+    merge_streams( letters, ints )
+      .take( 7 )
+      .assert == [ "a", 0, "b", 1, "c", 2, 3 ]
+```
