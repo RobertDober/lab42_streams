@@ -39,9 +39,11 @@ describe Lab42::Stream do
         it 'worx with scan1' do
           expect( subject.scan1( :+ ).to_a ).to eq [1, 3, 6]
         end
-        # it 'will execute the lambda', :wip do
-        #   expect( ->{subject.scan1{|*args| raise RuntimeError; empty_stream}} ).to raise_error
-        # end
+        it 'will execute the lambda' do
+          x = nil
+          subject.scan1{|*args| x=52; 1}.to_a
+          expect( x ).to eq 52
+        end
       end # context "some more elmements"
     end # context "finite_stream"
 
