@@ -13,6 +13,7 @@ module Lab42
                   :inject_stream, :__inject__, 
                   :make_cyclic, :map, :__map__,
                   :reduce,
+                  :__scan__,
          to_object: :self, as: :itself
 
       def append other
@@ -34,6 +35,15 @@ module Lab42
 
       # TODO: Move this into lab42/core as Object#itself
       def itself *args, &blk; self end
+
+      def scan initial, *args, &blk
+        [initial]
+      end
+
+      def scan1 *args, &blk
+        []
+      end
+
 
       private
 

@@ -117,6 +117,24 @@ module Lab42
       end
 
 
+      def scan initial, *args, &blk
+        cons_stream initial do
+          __scan__ initial, blk.make_behavior( *args )
+        end.tap{ |r|
+          # require 'pry'
+          # binding.pry
+        }
+      end
+
+      def scan1 *args, &blk
+        tail.scan( head, *args, &blk )
+      end
+
+      def __scan__ initial, beh
+        h = beh.(initial, head)
+        cons_stream( h ){ tail.__scan__ h, beh }
+      end
+
       def take_until *bhv, &blk
         bhv = blk.make_behavior( *bhv )
         x = []
@@ -198,11 +216,6 @@ module Lab42
           s = s.tail
           return ival if s.empty?
         end
-      end
-
-      def __scan__ agg, a_proc
-        new_agg = a_proc.(agg, head)
-        cons_stream( new_agg ){ tail.__inject__ new_agg, a_proc }
       end
 
     end # module Enumerable
