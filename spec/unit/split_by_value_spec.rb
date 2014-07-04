@@ -8,7 +8,7 @@ describe Lab42::Stream do
       end
     end # context 'empty stream'
 
-    context 'finite stream' do 
+    context 'finite stream' do
       subject do
         finite_stream %w{a b b a b}
       end

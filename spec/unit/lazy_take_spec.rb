@@ -35,7 +35,7 @@ describe Lab42::Stream do
       end
     end # context "infinite"
   end # context 'lazy_take'
-  context 'lazy_take_while (until)', :wip do
+  context 'lazy_take_while (until)' do
     context "empty" do 
       it 'is empty for empty' do
         expect( empty_stream.lazy_take_while :true ).to be_empty
