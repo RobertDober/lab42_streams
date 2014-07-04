@@ -18,6 +18,7 @@ module Lab42
     ConstraintError = Class.new RuntimeError
     include Enumerable
     attr_reader :head, :promise
+    alias_method :first, :head
 
     def append other
       raise ArgumentError, "not a stream #{other}" unless self.class === other
@@ -55,17 +56,6 @@ module Lab42
 
       new_head = op.(head, *args.map(&sendmsg(:head)))
       cons_stream( new_head ){ tail.__combine_streams__(op, args.map(&sendmsg(:tail))) }
-    end
-
-    def __flatmap__ a_proc
-      # require 'pry'
-      # binding.pry
-      hh = a_proc.( head )
-      if hh.empty?
-        tail.__flatmap__ a_proc
-      else
-        cons_stream( hh.head ){ hh.tail + tail.__flatmap__( a_proc ) }
-      end
     end
 
     private

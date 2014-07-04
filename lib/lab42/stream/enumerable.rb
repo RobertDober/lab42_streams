@@ -84,6 +84,39 @@ module Lab42
         __flatmap__ blk.make_behavior( *args )
       end
 
+      def __flatmap__ a_proc
+        # require 'pry'
+        # binding.pry
+        hh = a_proc.( head )
+        if hh.empty?
+          tail.__flatmap__ a_proc
+        else
+          cons_stream( hh.head ){ hh.tail + tail.__flatmap__( a_proc ) }
+        end
+      end
+
+      def flatmap_with_each *args, &blk
+        __flatmap_with_each__ blk.make_behavior( *args )
+      end
+
+      def __flatmap_with_each__ a_proc, rest_of_enum = []
+        # Process expanded values
+        return cons_stream( rest_of_enum.first ){ __flatmap_with_each__ a_proc, rest_of_enum.drop( 1 ) } unless
+          rest_of_enum.empty?
+
+        # Map a scalar value
+        hh = a_proc.( head )
+        return cons_stream( hh ){ tail.__flatmap_with_each__ a_proc } unless
+          hh.respond_to? :each
+
+        # Start a new expansion...
+        # ... consider an empty expansion
+        return tail.__flatmap__ a_proc if hh.empty?
+        # ... expand values
+        cons_stream( hh.first ){ tail.__flatmap_with_each__( a_proc, hh.drop( 1 ) ) }
+      end
+
+
       def take_until *bhv, &blk
         bhv = blk.make_behavior( *bhv )
         x = []
@@ -120,9 +153,9 @@ module Lab42
         __map__ blk.make_behavior( *args )
       end
 
-    def __map__ prc
-      cons_stream( prc.(head) ){ tail.__map__ prc }
-    end
+      def __map__ prc
+        cons_stream( prc.(head) ){ tail.__map__ prc }
+      end
 
 
       def reduce_while cond, red=nil, &reducer
