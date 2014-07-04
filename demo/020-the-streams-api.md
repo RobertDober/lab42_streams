@@ -205,6 +205,22 @@ about everybody is quite familiar.
     ints.take_until( :>, 9 ).assert == [*0..9]
 ```
 
+###### lazy\_take\* methods
+
+`take` and his friends' role is it to realize part of the stream, however sometimes it is useful to create a
+stream (often finite, but not necessarily) that corresponds to the first elements, indicated by number or a predicate.
+
+In order to achieve this one can use the `lazy_take*` methods.
+
+```ruby
+    three_first = ints.lazy_take( 3 )
+
+    three_first.head.assert == 0
+    three_first.entries.assert == [*0..2]
+```
+
+
+
 ###### drop\* methods
 
 The `drop*` methods return a stream from which a number of elements or elements according to a condition have been removed:

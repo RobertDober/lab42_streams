@@ -7,6 +7,7 @@ require_relative './stream/enumerable'
 require_relative './stream/hash'
 require_relative './stream/proc'
 require_relative './stream/class_methods'
+require_relative './stream/utility'
 
 # TODO: This should rather be implemented in lab_42/core/fn
 require_relative './stream/kernel/extensions'
@@ -16,7 +17,6 @@ module Lab42
     extend ClassMethods
 
     ConstraintError = Class.new RuntimeError
-    include Enumerable
     attr_reader :head, :promise
     alias_method :first, :head
 

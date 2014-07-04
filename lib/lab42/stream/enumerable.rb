@@ -63,6 +63,40 @@ module Lab42
         x
       end
 
+      def lazy_take n=1
+        raise ArgumentError, "need a non negative Fixnum" if !(Fixnum === n) || n < 0
+        __lazy_take__ n
+      end
+
+      def __lazy_take__ n
+        return empty_stream if n.zero?
+        cons_stream( head ){ tail.__lazy_take__ n.pred }
+      end
+
+      def lazy_take_until *bhv, &blk
+        bhv = blk.make_behavior( *bhv )
+        __lazy_take_until__ bhv
+      end
+
+      def __lazy_take_until__ bhv
+        return empty_stream if bhv.(head)
+        cons_stream( head ){
+          tail.__lazy_take_until__ bhv
+        }
+      end
+
+      def lazy_take_while *bhv, &blk
+        bhv = blk.make_behavior( *bhv )
+        __lazy_take_while__ bhv
+      end
+
+      def __lazy_take_while__ bhv
+        return empty_stream unless bhv.(head)
+        cons_stream( head ){
+          tail.__lazy_take_while__ bhv
+        }
+      end
+
       def reduce red=nil, &reducer
         red = reducer.make_behavior( red )
         tail.__inject__ head, red
@@ -219,5 +253,6 @@ module Lab42
       end
 
     end # module Enumerable
+    include Enumerable
   end # class Stream
 end # module Lab42
