@@ -24,6 +24,14 @@ describe Lab42::Stream do
     it 'generates the square of ints' do
       expect( squares.take 5 ).to eq([0, 1, 4, 9, 16])
     end
-    
+
+    context "many streams" do 
+      let(:adder){ ->(*a){ a.inject 0, :+ } }
+      
+      it "can multiply a stream by three" do
+        expect( combine_streams( ints, ints, ints, adder ).take 3 ).to eq [0, 3, 6]
+      end
+    end # context "many streams"
   end # context "infinite streams"
+
 end # describe Lab42::Stream

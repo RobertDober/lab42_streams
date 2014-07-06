@@ -8,13 +8,14 @@ module Lab42
       extend Forwarder
       # It is the nature of the EmptyStream instance to return itself for a plethora of methods
       # this can be expressed as follows:
-      forward_all :drop, :drop_unitl, :drop_while, 
+      forward_all :combine, :__combine__,
+                  :drop, :drop_unitl, :drop_while, 
                   :flatmap, :__flatmap__, :filter, :__filter__, 
                   :inject_stream, :__inject__, 
                   :lazy_take, :lazy_take_until, :lazy_take_while,
                   :make_cyclic, :map, :__map__,
                   :reduce,
-                  :__scan__, :split_by, :split_by_value,
+                  :segment, :__segment__, :__scan__, :split_by, :split_by_value,
          to_object: :self, as: :itself
 
       def append other

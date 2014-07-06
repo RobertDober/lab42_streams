@@ -14,7 +14,7 @@ class Proc
 
   # TODO: Use this from core/fn as soon as available
   def make_behavior *args
-    raise ArgumentError, "cannot specify behavior with block and args: #{args.inpect}" unless args.compact.empty?
+    raise ArgumentError, "cannot specify behavior with block and args: #{args.inspect}" unless args.compact.empty?
     self
   end
 

@@ -6,9 +6,8 @@ module Kernel
     end
   end
 
-  def combine_streams s1, s2, op=nil, &operation
-    return empty_stream if s1.empty? || s2.empty?
-    return s1.combine_streams( op, s2, &operation )
+  def combine_streams stream, *streams_and_ops, &operation
+    stream.combine( *streams_and_ops, &operation )
   end
 
   def cons_stream head, &tail

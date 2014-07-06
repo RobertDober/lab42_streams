@@ -1,20 +1,19 @@
 module Lab42
   class Stream
     module Utility
-      def split_by_value value, exclude: false
-        if head == value
-          next_stream = tail.lazy_take_until{ |e| e == value }
-          if !exclude
-            head_stream = cons_stream(head){ next_stream }
-          else
-            head_stream = next_stream
-          end
-          cons_stream( head_stream ){
-            tail.drop_until{ |e| e == value }.split_by_value value, exclude: exclude
+
+      def segment *args, &blk
+        __segment__ blk.make_behavior( *args )
+      end
+
+      def __segment__ beh
+        if beh.( head )
+          cons_stream( cons_stream( head ){  tail.lazy_take_until beh } ){
+            tail.drop_until( beh ).__segment__ beh
           }
         else
-          cons_stream( lazy_take_until{ |e| e == value } ){
-            drop_until{ |e| e == value }.split_by_value value
+          cons_stream( lazy_take_until beh ){
+            tail.drop_until( beh ).__segment__ beh
           }
         end
       end
