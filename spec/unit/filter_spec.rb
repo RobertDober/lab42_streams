@@ -2,12 +2,12 @@ require 'spec_helper'
 require 'lab42/core/fn'
 
 describe Lab42::Stream do 
-  context :filter do 
+  context :filter do
     let(:ints){stream_by(0,:+,1)}
     let(:evens){stream_by(0,:+,2)}
     let(:five_first_evens){evens.take 5}
 
-    context "empty is empty for" do
+    context "empty is empty for, :wip" do
       
       it "block" do
         expect( empty_stream.filter{} ).to be_empty

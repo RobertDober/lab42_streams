@@ -16,6 +16,7 @@ module Lab42
                   :make_cyclic, :map, :__map__,
                   :reduce,
                   :segment, :__segment__, :__scan__, :split_by, :split_by_value,
+                  :zip, :__zip__,
          to_object: :self, as: :itself
 
       def append other

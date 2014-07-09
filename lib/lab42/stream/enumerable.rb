@@ -226,6 +226,18 @@ module Lab42
         x
       end
 
+      def zip *other_streamables
+        streams = other_streamables.map{ |s|
+          self.class === s ? s : s.to_stream
+        }
+        __zip__ streams
+      end
+
+      def __zip__ streams
+        cons_stream( [head] + streams.map(:head) ){
+          tail.__zip__ streams.map(:tail)
+        }
+      end
 
       def __filter__ a_proc
         if a_proc.( head )
@@ -251,7 +263,6 @@ module Lab42
           return ival if s.empty?
         end
       end
-
     end # module Enumerable
     include Enumerable
   end # class Stream

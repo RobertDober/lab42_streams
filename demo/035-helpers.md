@@ -1,7 +1,6 @@
 # Lab42::Streams Demo
 
-## Finite Helpers
-
+## Helpers
 
 ### Segmenting Streams
 
@@ -62,4 +61,17 @@ the definition at all and Ruby, quite correctly is just looking for that 42 > 42
 
 It might as well not find it ;(.
 
+
+## Covnenience Methods
+
+The `Stream` API is so powerful that many methods of the `Enumerable` API are trivial to implement.
+
+However readability and expectations might not be served best with the following code
+
+```ruby
+    # An implementation of Enumerable#with_index
+    
+    some_stream = const_stream 1
+    some_stream.zip_ary( iterate 0, :inc ).take( 5 ).assert == [ [1, 0], [1, 1], [1, 2], [1, 3], [1, 4] ]
+```
 

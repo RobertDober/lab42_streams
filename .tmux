@@ -19,6 +19,7 @@ function main
 
     new_window 'vi spec'
     open_vi spec ':colorscheme solarized' ':set background=light'
+    send_keys ':tabnew unit/filter_spec.rb'
 
 
     new_vi demo ':colorscheme molokai'
