@@ -72,6 +72,12 @@ However readability and expectations might not be served best with the following
     # An implementation of Enumerable#with_index
     
     some_stream = const_stream 1
-    some_stream.zip_ary( iterate 0, :inc ).take( 5 ).assert == [ [1, 0], [1, 1], [1, 2], [1, 3], [1, 4] ]
+    some_stream.zip( iterate 0, :succ ).map(&:entries).take( 5 ).assert == [ [1, 0], [1, 1], [1, 2], [1, 3], [1, 4] ]
+```
+
+And for those, who find it to cumbersome to map explicitly to array elements, there is `zip_as_ary` 
+
+```ruby
+    some_stream.zip_as_ary( iterate 10, :succ).take( 3 ).assert == [ [1, 10], [1, 11], [1, 12] ]
 ```
 

@@ -4,6 +4,8 @@ end
 
 module Lab42
   class Stream
+    IllegalState = Class.new RuntimeError
+
     module Enumerable
 
       def drop_until *bhv, &blk
@@ -231,6 +233,11 @@ module Lab42
           self.class === s ? s : s.to_stream
         }
         __zip__ streams
+      end
+
+      def zip_as_ary *other_streamables
+        zip( *other_streamables )
+          .map( &:entries )
       end
 
       def __zip__ streams
