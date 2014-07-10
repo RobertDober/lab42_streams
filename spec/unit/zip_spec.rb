@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Lab42::Stream do 
-  context "zip", :wip do
+  context "zip" do
     let( :ints ){ iterate 0, :succ }
     let( :digits ){ finite_stream 0..9 }
     

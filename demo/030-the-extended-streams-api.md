@@ -2,7 +2,7 @@
 
 ## The Extended Stream API
 
-###### Merging
+###### Merging And Splitting
 
 Starting from our cannonical `ints` again, we will show how to merge infinite streams together
 
@@ -39,6 +39,14 @@ and that goes for a mixture of finite and infinite streams too.
     merge_streams( letters, ints )
       .take( 7 )
       .assert == [ "a", 0, "b", 1, "c", 2, 3 ]
+```
+
+Slitting, however, is an instance method as it applies to only one stream.
+
+```ruby
+    odds, evens = ints.drop.split_into 2
+    odds.take( 5 ).assert == [1, 3, 5, 7, 9]
+    evens.take(3).assert  == [2, 4, 6]
 ```
 
 

@@ -32,9 +32,22 @@ describe Lab42::Stream do
           merge_streams( finite_stream(1..2), const_stream( "*") ).take 5
         ).to eq([1, "*", 2, "*", "*" ])
       end
-      
     end # context :mixed_streams
     
   end # context :merge_streams
+
+  context 'split a stream' do 
+    let( :ints ){ iterate 0, :succ }
+    
+    context 'can be split into evens and odds' do
+      let( :evens ){ ints.split_into( 2 ).first }
+      let( :odds ){ ints.split_into( 2 ).last }
+      
+      it{ expect( evens.take(3) ).to eq [0, 2, 4] }
+      it{ expect( odds.take(3) ).to eq [1, 3, 5] }
+      
+    end # context 'can be split into evens and odds'
+      
+  end # context 'split a stream'
 end # describe Lab42::Stream
 

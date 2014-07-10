@@ -17,6 +17,10 @@ module Lab42
           }
         end
       end
+
+      def with_index start=0
+        zip_as_ary iterate( start, :succ )
+      end
     end # module Utility
     include Utility
   end # class Stream

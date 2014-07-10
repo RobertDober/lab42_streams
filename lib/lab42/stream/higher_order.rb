@@ -17,7 +17,15 @@ module Lab42
         cons_stream( new_head ){
           tail.__combine__( op, *streams.map( &:tail ) )
         }
+      end
 
+      def split_into n
+        indexed = with_index
+        n.times.map do | i |
+          indexed
+            .filter{ |e, idx| idx % n == i }
+            .map( :first )
+        end
       end
     end # module HigherOrder
     include HigherOrder
