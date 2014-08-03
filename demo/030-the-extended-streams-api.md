@@ -28,7 +28,7 @@ streams of unequal length can be merged together too:
 ```ruby
     letters = finite_stream %W{a b c}
     digits  = finite_stream 1..4
-    
+
     merge_streams( letters, digits )
       .to_a
       .assert == [ "a", 1, "b", 2, "c", 3, 4 ]
@@ -37,7 +37,7 @@ streams of unequal length can be merged together too:
 and that goes for a mixture of finite and infinite streams too.
 
 ```ruby
-    
+
     merge_streams( letters, ints )
       .take( 7 )
       .assert == [ "a", 0, "b", 1, "c", 2, 3 ]
@@ -82,7 +82,7 @@ It simply transforms a stream to the values `inject` for `scan` and `reduce` for
     pascals.take( 5 ).assert == [0, 0, 1, 3, 6]
 ```
 
-However if we do not want to _inject_ a value we need to use `scan1` 
+However if we do not want to _inject_ a value we need to use `scan1`
 
 ```ruby
     pascals = ints.scan1 :+

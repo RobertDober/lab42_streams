@@ -19,6 +19,12 @@ describe Lab42::Stream do
           merge_streams_by( finite_stream(1..2), const_stream( 3 ), :> ).take 7
         ).to eq([3, 1, 3, 2, 3, 3, 3])
       end
+      it "can be merged with a block" do
+        expect(
+          merge_streams_by( finite_stream(1..2), const_stream( 3 )){ |a, b| a > b }.take 7
+        ).to eq([3, 1, 3, 2, 3, 3, 3])
+        
+      end
     end # context :mixed_streams
     
   end # context :merge_streams
