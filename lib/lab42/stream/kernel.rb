@@ -14,6 +14,13 @@ module Kernel
     Lab42::Stream.new head, tail
   end
 
+  def cons_stream_n first_head, *more_heads, &tail
+    return cons_stream( first_head, &tail ) if more_heads.empty?
+    return cons_stream( first_head ){
+      cons_stream_n( *more_heads, &tail )
+    }
+  end
+
   def const_stream const
     c = cons_stream( const ){ c }
   end
@@ -46,6 +53,11 @@ module Kernel
     end
   end
 
+  def merge_streams_by *streams_and_beh, &blk
+    beh = blk || streams_and_beh.pop
+    __merge_streams_by__ beh, streams_and_beh
+  end
+
   def iterate *args, &blk
     if blk
       cons_stream(*args){ iterate( blk.(*args), &blk ) }
@@ -59,4 +71,19 @@ module Kernel
     end
   end
   alias_method :stream_by, :iterate
+
+  private
+  def __merge_streams_by__ beh, streams
+    # TODO: Get rid of Symbol#to_proc kludge
+    still_there = streams.reject( &:empty? )
+    return empty_stream if still_there.empty?
+    
+    ordered_heads = still_there
+      .map( &:head )
+      .ordered_by( beh )
+
+    cons_stream_n( *ordered_heads ){
+      __merge_streams_by__ beh, still_there.map( &:tail )
+    }
+  end
 end

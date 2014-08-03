@@ -34,7 +34,7 @@ An infinite stream segmented into finite segments
 
 ##### Infinite segments
 
-The following code is, what I call the _trap of laziness_, if we segment, say the ints into ints smaller than 42 and
+The following code demontsrates, what I call the _trap of laziness_, if we segment, say the ints into ints smaller than 42 and
 the rest as follows:
 
 ```ruby
@@ -42,8 +42,8 @@ the rest as follows:
     segments =
       ints.segment :==, 42
 
-    # segments.head.to_a.assert == [*0..41]
-    # segments.tail.head.drop(1000).take.assert == [1042]
+    segments.head.to_a.assert == [*0..41]
+    segments.tail.head.drop(1000).take.assert == [1042]
 ```
 
 Now what would `segments.tail.tail` be?
@@ -70,14 +70,21 @@ However readability and expectations might not be served best with the following
 
 ```ruby
     # An implementation of Enumerable#with_index
-    
+
     some_stream = const_stream 1
     some_stream.zip( iterate 0, :succ ).map(&:entries).take( 5 ).assert == [ [1, 0], [1, 1], [1, 2], [1, 3], [1, 4] ]
 ```
 
-And for those, who find it to cumbersome to map explicitly to array elements, there is `zip_as_ary` 
+And for those, who find it to cumbersome to map explicitly to array elements, there is `zip_as_ary`
 
 ```ruby
     some_stream.zip_as_ary( iterate 10, :succ).take( 3 ).assert == [ [1, 10], [1, 11], [1, 12] ]
+```
+
+But the `with_index` method does just that, more or less.
+
+```ruby
+    some_stream.with_index.take(2).assert == [[1,0], [1,1]]
+    some_stream.with_index( from: 10 ).take( 2 ).assert == [[1,10], [1,11]]
 ```
 

@@ -2,17 +2,19 @@
 
 ## The Extended Stream API
 
-###### Merging And Splitting
+### Merging And Splitting
+
+#### Merge in Natural Order
 
 Starting from our cannonical `ints` again, we will show how to merge infinite streams together
 
 ```ruby
-  ints = iterate 0, :succ
+    ints  = iterate 0, :succ
     evens = ints.map :*, 2
     odds  = evens.map :succ
 
     evens.take(5).assert == [0, 2, 4, 6, 8]
-    odds.take(5).assert == [1, 3, 5, 7, 9]
+    odds.take(5).assert  == [1, 3, 5, 7, 9]
 
     numbas = merge_streams evens, odds
     numbas.take(5).assert == [*0..4]
@@ -40,6 +42,23 @@ and that goes for a mixture of finite and infinite streams too.
       .take( 7 )
       .assert == [ "a", 0, "b", 1, "c", 2, 3 ]
 ```
+
+#### Merge be means of an order function
+
+This implements an operation that gets as close to sorting infinite streams as one can get ;).
+
+AAMOF the `merge_streams_by` method will take a sorting function issued as a block or behavior
+and will sort the heads of all merged streams before lazyly merging the tails on behalf of the
+same function.
+
+Here is a simple first example:
+
+```ruby
+    reversed = merge_streams_by evens, odds, :>
+
+    reversed.take( 5 ).assert == [ 1, 0, 3, 2, 5 ]
+```
+
 
 Slitting, however, is an instance method as it applies to only one stream.
 

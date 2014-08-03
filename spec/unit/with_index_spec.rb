@@ -21,8 +21,11 @@ describe Lab42::Stream do
     end # context 'infinite steam'
 
     context 'and an offset' do 
-      it 'returns an indexed stream with an offset' do
+      it 'returns an indexed stream with an offset passed in as a postional parameter' do
         expect( finite_stream(1..2).with_index(42).entries ).to eq [[1,42], [2,43]]
+      end
+      it 'returns an indexed stream with an offset passed in as a keyword parameter' do
+        expect( finite_stream(1..2).with_index(from: 42).entries ).to eq [[1,42], [2,43]]
       end
     end # context 'and an offset'
   end # context 'with_index'

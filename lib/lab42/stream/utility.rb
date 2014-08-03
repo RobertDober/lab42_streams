@@ -18,7 +18,8 @@ module Lab42
         end
       end
 
-      def with_index start=0
+      def with_index  start={}
+        start = Hash === start ? start.fetch( :from, 0 ) : start
         zip_as_ary iterate( start, :succ )
       end
     end # module Utility

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lab42::Stream do 
+describe Lab42::Stream do
   context "cons_stream" do 
     subject do
       cons_stream(1){
@@ -19,4 +19,14 @@ describe Lab42::Stream do
       expect( subject.tail.tail ).to be_empty
     end
   end # context "cons_stream"
+
+  context "cons_stream_n" do 
+    subject do
+      cons_stream_n( 1, 2, 3 ){ subject }
+    end
+
+    it "constructs a stream" do
+      expect( subject.take 5 ).to eq [1, 2, 3, 1, 2]
+    end
+  end # context "cons_stream_n"
 end # describe Lab42::Stream

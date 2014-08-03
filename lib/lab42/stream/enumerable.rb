@@ -1,6 +1,4 @@
-module Enumerable
-  def to_stream; finite_stream self end
-end
+require_relative 'core/enumerable'
 
 module Lab42
   class Stream
