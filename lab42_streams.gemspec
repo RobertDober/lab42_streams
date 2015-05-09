@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/RobertDober/lab42_streams"
   s.licenses    = %w{MIT}
 
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.1.0'
 
   s.add_dependency 'forwarder2', '~> 0.2'
   s.add_dependency 'lab42_core', '~> 0.0'
