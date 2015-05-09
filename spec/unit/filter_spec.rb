@@ -39,7 +39,15 @@ describe Lab42::Stream do
         ).to eq( five_first_evens )
       end
     end
+  end # context :filter
 
-  end # context :map
-
+  context "long tail recursion problem" do 
+    let(:ints){stream_by(0,:+,1)}
+    it "is lazy even if the predicate does not apply", :slow do
+      expect( ints.filter(:>, 1_000_000).head ).to eq 1_000_001
+    end
+    it "still terminates on empty" do
+      expect( finite_stream(1..10).filter(:>, 10) ).to be_empty
+    end
+  end # context "long tail recursion problem"
 end # describe Lab42::Stream

@@ -107,11 +107,11 @@ module Lab42
       end
 
       def filter *args, &blk
-        __filter__ blk.make_behavior( *args )
+        __filter__ self, blk.make_behavior( *args )
       end
 
       def reject *args, &blk
-        __filter__ blk.make_behavior( *args ).not
+        __filter__ self, blk.make_behavior( *args ).not
       end
 
       def flatmap *args, &blk
@@ -244,11 +244,11 @@ module Lab42
         }
       end
 
-      def __filter__ a_proc
-        if a_proc.( head )
-          cons_stream( head ){ tail.__filter__ a_proc } 
-        else
-          tail.__filter__ a_proc
+      def __filter__ stream, a_proc
+        loop do
+          return stream if stream.empty?
+          return cons_stream( stream.head ){ __filter__ stream.tail, a_proc } if a_proc.( stream.head )
+          stream = stream.tail
         end
       end
 
