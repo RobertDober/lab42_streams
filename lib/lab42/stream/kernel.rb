@@ -62,28 +62,34 @@ module Kernel
     if blk
       cons_stream(*args){ iterate( blk.(*args), &blk ) }
     else
-      rest = args.drop 1
-      if Method === rest.first 
-        cons_stream( args.first ){ iterate( rest.first.(*([args.first] + rest.drop(1))), *rest ) }
-      else
-        cons_stream( args.first ){ iterate( sendmsg(*rest).(args.first), *rest ) }
-      end
+      iterate_without_block args
     end
   end
   alias_method :stream_by, :iterate
 
-  private
-  def __merge_streams_by__ beh, streams
-    # TODO: Get rid of Symbol#to_proc kludge
-    still_there = streams.reject( &:empty? )
-    return empty_stream if still_there.empty?
-    
-    ordered_heads = still_there
-      .map( &:head )
-      .ordered_by( beh )
-
-    cons_stream_n( *ordered_heads ){
-      __merge_streams_by__ beh, still_there.map( &:tail )
-    }
+  def iterate_without_block args
+    rest = args.drop 1
+    if Method === rest.first 
+      cons_stream( args.first ){ iterate( rest.first.(*([args.first] + rest.drop(1))), *rest ) }
+    else
+      cons_stream( args.first ){ iterate( sendmsg(*rest).(args.first), *rest ) }
+    end
   end
+
+private
+def __merge_streams_by__ beh, streams
+  still_there = streams.reject( &:empty? )
+  return empty_stream if still_there.empty?
+  __merge_streams_by_with_present__ beh, still_there, streams
+end 
+
+def __merge_streams_by_with_present__ beh, still_there, streams
+  ordered_heads = still_there
+  .map( &:head )
+  .ordered_by( beh )
+
+  cons_stream_n( *ordered_heads ){
+    __merge_streams_by__ beh, still_there.map( &:tail )
+  }
+end
 end
