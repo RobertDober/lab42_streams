@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Lab42::Stream do
   context :append do
-    it "two finite streams" do 
+    it "two finite streams" do
       expect( finite_stream([1,2]).append( finite_stream [3] ).to_a ).to eq([1,2,3])
     end
     

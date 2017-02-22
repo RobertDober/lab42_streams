@@ -1,4 +1,5 @@
 require_relative 'core/enumerable'
+require_relative 'behavior'
 
 module Lab42
   class Stream
@@ -7,7 +8,7 @@ module Lab42
     module Enumerable
 
       def drop_until *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
+        bhv = Behavior.make( *bhv, &blk )
         s = self
         loop do
           return s if bhv.(s.head)
@@ -19,7 +20,7 @@ module Lab42
       # N.B. Not implemented as drop_until( bhv.not )
       # for performance reasons
       def drop_while *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
+        bhv = Behavior.make( *bhv, &blk )
         s = self
         loop do
           return s unless bhv.(s.head)
@@ -31,6 +32,7 @@ module Lab42
       def each
         t = self
         loop do
+          return if t.empty?
           yield t.head
           t = t.tail
         end
@@ -74,7 +76,7 @@ module Lab42
       end
 
       def lazy_take_until *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
+        bhv = Behavior.make( *bhv, &blk )
         __lazy_take_until__ bhv
       end
 
@@ -86,7 +88,7 @@ module Lab42
       end
 
       def lazy_take_while *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
+        bhv = Behavior.make( *bhv, &blk )
         __lazy_take_while__ bhv
       end
 
@@ -107,20 +109,18 @@ module Lab42
       end
 
       def filter *args, &blk
-        __filter__ self, blk.make_behavior( *args )
+        __filter__ self, Behavior.make( *args, &blk )
       end
 
       def reject *args, &blk
-        __filter__ self, blk.make_behavior( *args ).not
+        __filter__ self, Behavior.make( *args ).not
       end
 
       def flatmap *args, &blk
-        __flatmap__ blk.make_behavior( *args )
+        __flatmap__ Behavior.make( *args, &blk )
       end
 
       def __flatmap__ a_proc
-        # require 'pry'
-        # binding.pry
         hh = a_proc.( head )
         if hh.empty?
           tail.__flatmap__ a_proc
@@ -130,18 +130,18 @@ module Lab42
       end
 
       def flatmap_with_each *args, &blk
-        __flatmap_with_each__ blk.make_behavior( *args )
+        __flatmap_with_each__ Behavior.make( *args, &blk )
       end
 
       def __flatmap_with_each__ a_proc, rest_of_enum = []
         # Process expanded values
         return cons_stream( rest_of_enum.first ){ __flatmap_with_each__ a_proc, rest_of_enum.drop( 1 ) } unless
-          rest_of_enum.empty?
+        rest_of_enum.empty?
 
         # Map a scalar value
         hh = a_proc.( head )
         return cons_stream( hh ){ tail.__flatmap_with_each__ a_proc } unless
-          hh.respond_to? :each
+        hh.respond_to? :each
 
         # Start a new expansion...
         # ... consider an empty expansion
@@ -153,10 +153,8 @@ module Lab42
 
       def scan initial, *args, &blk
         cons_stream initial do
-          __scan__ initial, blk.make_behavior( *args )
+          __scan__ initial, Behavior.make( *args, &blk )
         end.tap{ |r|
-          # require 'pry'
-          # binding.pry
         }
       end
 
@@ -170,7 +168,7 @@ module Lab42
       end
 
       def take_until *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
+        bhv = Behavior.make( *bhv, &blk )
         x = []
         each do | ele |
           return x if bhv.( ele )
@@ -179,7 +177,7 @@ module Lab42
         x
       end
       def take_while *bhv, &blk
-        bhv = blk.make_behavior( *bhv )
+        bhv = Behavior.make( *bhv, &blk )
         x = []
         each do | ele |
           return x unless bhv.( ele )
@@ -189,8 +187,9 @@ module Lab42
       end
 
       def to_a
-        take_while :true
+        take_while Behavior.const( true ) 
       end
+
       alias_method :entries, :to_a
 
       def make_cyclic
@@ -202,7 +201,7 @@ module Lab42
       def map *args, &blk
         # TODO: Get this check and a factory to create a proc for this into core/fn
         raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
-        __map__ blk.make_behavior( *args )
+        __map__ Behavior.make( *args, &blk )
       end
 
       def __map__ prc
@@ -235,7 +234,7 @@ module Lab42
 
       def zip_as_ary *other_streamables
         zip( *other_streamables )
-          .map( &:entries )
+        .map( &:entries )
       end
 
       def __zip__ streams

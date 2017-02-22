@@ -13,15 +13,13 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/RobertDober/lab42_streams"
   s.licenses    = %w{MIT}
 
-  s.required_ruby_version = '>= 2.1.0'
+  s.required_ruby_version = '>= 2.3.0'
 
   s.add_dependency 'forwarder2', '~> 0.2'
-  s.add_dependency 'lab42_core', '~> 0.0'
+  s.add_dependency 'lab42_core', '~> 0.4'
 
-  s.add_development_dependency 'pry', '~> 0.9'
-  s.add_development_dependency 'pry-nav', '~> 0.2'
-  s.add_development_dependency 'rspec', '~> 2.14'
+  s.add_development_dependency 'pry-byebug', '~> 3.4.2'
+  s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'qed', '~> 2.9'
   s.add_development_dependency 'ae', '~> 1.8'
-  s.add_development_dependency 'byebug', '~> 3.1'
 end

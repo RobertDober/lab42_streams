@@ -33,10 +33,17 @@ module Kernel
   end
 
   def finite_stream enum
-    e = enum.lazy
-    cons_stream( e.peek ){ finite_stream e.drop( 1 ) }
-  rescue StopIteration
-    empty_stream
+    return empty_stream if enum.empty?
+    case enum
+    when Range
+      cons_stream(enum.first){ finite_stream(enum.first.succ..enum.last) }
+    when Array
+      cons_stream(enum.first){ finite_stream(enum.drop(1)) }
+    when Hash
+      cons_stream(enum.first){ finite_stream(enum.without(enum.first.first)) }
+    else
+      raise TypeError, "cannot create a finite stream from type #{enum.class.inspect}"
+    end
   end
 
   def flatmap stream, *args, &blk
