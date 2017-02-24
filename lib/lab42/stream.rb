@@ -9,7 +9,6 @@ require_relative './stream/proc'
 require_relative './stream/class_methods'
 require_relative './stream/utility'
 
-# TODO: This should rather be implemented in lab_42/core/fn
 require_relative './stream/kernel/extensions'
 
 module Lab42
@@ -52,10 +51,10 @@ module Lab42
     def to_stream; self end
 
     def __combine_streams__ op, args
-      return empty_stream if args.any?(&sendmsg(:empty?))
+      return empty_stream if args.any?(&:empty?)
 
-      new_head = op.(head, *args.map(&sendmsg(:head)))
-      cons_stream( new_head ){ tail.__combine_streams__(op, args.map(&sendmsg(:tail))) }
+      new_head = op.(head, *args.map(&:head))
+      cons_stream( new_head ){ tail.__combine_streams__(op, args.map(&:tail)) }
     end
 
     private
