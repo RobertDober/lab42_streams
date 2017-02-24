@@ -9,24 +9,14 @@ module Lab42
 
       def drop_until *bhv, &blk
         bhv = Behavior.make( *bhv, &blk )
-        s = self
-        loop do
-          return s if bhv.(s.head)
-          s = s.tail
-        end
-        empty_stream
+        __drop_while__ bhv.not
       end
 
       # N.B. Not implemented as drop_until( bhv.not )
       # for performance reasons
       def drop_while *bhv, &blk
         bhv = Behavior.make( *bhv, &blk )
-        s = self
-        loop do
-          return s unless bhv.(s.head)
-          s = s.tail
-        end
-        empty_stream
+        __drop_while__ bhv
       end
 
       def each
@@ -201,7 +191,6 @@ module Lab42
       end
 
       def map *args, &blk
-        # TODO: Get this check and a factory to create a proc for this into core/fn
         raise ArgumentError, "use either a block or arguments" if args.empty? && !blk || !args.empty? && blk
         __map__ Behavior.make( *args, &blk )
       end
@@ -245,6 +234,14 @@ module Lab42
         }
       end
 
+      def __drop_while__ bhv
+        s = self
+        loop do
+          return s unless bhv.(s.head)
+          s = s.tail
+        end
+        empty_stream
+      end
       def __filter__ stream, a_proc
         loop do
           return stream if stream.empty?

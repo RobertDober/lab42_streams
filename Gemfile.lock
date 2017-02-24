@@ -58,12 +58,12 @@ PLATFORMS
 
 DEPENDENCIES
   ae (~> 1.8)
-  codeclimate-test-reporter
+  codeclimate-test-reporter (~> 1.0.0)
   lab42_streams!
   pry-byebug (~> 3.4.2)
   qed (~> 2.9)
   rspec (~> 3.5)
-  simplecov (~> 0.13)
+  simplecov
 
 BUNDLED WITH
    1.14.5
