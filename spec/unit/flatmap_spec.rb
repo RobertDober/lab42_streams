@@ -35,6 +35,12 @@ describe Lab42::Stream do
           finite_stream(1..2).flatmap{|a| [a,a] }
         }  ).to raise_error(*error)
       end
+      it "even in the functional form" do
+        expect( ->{
+          flatmap(finite_stream(1..2)){|a| [a,a] }
+        }  ).to raise_error(*error)
+        
+      end
     end # context "only streams are expanded"
 
     context "flatmap_with_each to the rescue" do 

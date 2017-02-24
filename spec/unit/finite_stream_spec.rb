@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Lab42::Stream do 
+describe Lab42::Stream do
   context :finite_stream do
 
     it "from arrays" do
@@ -27,6 +27,10 @@ describe Lab42::Stream do
       expect(
         finite_stream((1..5).lazy).take 5
       ).to eq([*1..5])
+    end
+
+    it "not from anything" do
+      expect{ finite_stream(Object.new) }.to raise_error(TypeError, %r{cannot create.*Object})
     end
 
   end # context :to_stream

@@ -56,8 +56,6 @@ module Kernel
     stream.flatmap( *args, &blk )
   end
 
-  # TODO: Reimplement with a cursor into streams to avoid
-  # the (potentially) costly array arithm in the tail def
   def merge_streams *streams
     s = streams.reject( &:empty? )
     return empty_stream if s.empty?

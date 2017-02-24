@@ -33,19 +33,16 @@ module Lab42
       def inject *args; args.first end
       alias_method :__inject__, :inject
 
-      # TODO: Move this into lab42/core as Object#itself
-      def itself *args, &blk; self end
+      def itself *; self end
 
-      def scan initial, *args, &blk
+      def scan( initial, * )
         [initial]
       end
 
-      def scan1 *args, &blk
+      def scan1( * )
         []
       end
 
-
-      private
 
       def self.new
         @__instance__ ||= allocate
