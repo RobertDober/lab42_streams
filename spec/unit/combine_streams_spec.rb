@@ -6,13 +6,6 @@ RSpec.describe Lab42::Stream do
     let(:integers){ iterate 0, :succ }
     let(:digits)  {finite_stream 0..9}
 
-    let( :adder ){
-      -> *args do
-        args.inject 0, :+
-      end
-    }
-    
-
     context 'needs a stream param' do 
       it{ expect{ digits.combine_streams }.to raise_error(ArgumentError, %r{\AMissing stream parameters}) }
     end
@@ -20,6 +13,7 @@ RSpec.describe Lab42::Stream do
     context :combine_streams do
       it "works with itself" do
         expect( combine_streams(digits, digits, :+).drop(6).take(5) ).to eq [12, 14, 16, 18]
+        expect( digits.combine_streams(:+, digits).drop(6).take(5) ).to eq [12, 14, 16, 18]
       end
 
       it "works with others" do
