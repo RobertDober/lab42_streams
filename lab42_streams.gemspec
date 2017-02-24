@@ -22,4 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec', '~> 3.5'
   s.add_development_dependency 'qed', '~> 2.9'
   s.add_development_dependency 'ae', '~> 1.8'
+  s.add_development_dependency 'simplecov', '~> 0.13'
 end

@@ -63,6 +63,7 @@ DEPENDENCIES
   pry-byebug (~> 3.4.2)
   qed (~> 2.9)
   rspec (~> 3.5)
+  simplecov (~> 0.13)
 
 BUNDLED WITH
    1.14.5
