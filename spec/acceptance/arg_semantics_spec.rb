@@ -1,10 +1,11 @@
 require 'spec_helper'
+require 'lab42/core/fn'
 
-N = 5
 describe Lab42::Stream do 
-  let(:expected){[*0...N]}
+  let( :n ){ 5 }
+  let(:expected){[*0...n]}
   let(:verify){->(result){
-    expect( result.take N ).to eq(expected)
+    expect( result.take n ).to eq(expected)
   }}
   context 'function objects are recoginized' do
     it "by stream_by" do
@@ -13,7 +14,7 @@ describe Lab42::Stream do
     it "by combine_streams" do
       ones = const_stream 1
       ints = cons_stream( 0 ){ 
-        combine_streams ints, ones, Fixnum.fm.+ }
+        combine_streams ints, ones, Integer.fm.+ }
       verify.( ints )
     end
   end # context 'function objects are recoginized'

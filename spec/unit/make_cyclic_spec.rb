@@ -4,7 +4,7 @@ describe Lab42::Stream do
   context :make_cyclic do 
     context :empty do 
       it "is still empty" do
-        empty_stream.make_cyclic.should be_empty
+        expect( empty_stream.make_cyclic ).to be_empty
       end
     end # context :empty
 

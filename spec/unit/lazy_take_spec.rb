@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Lab42::Stream do 
   context 'lazy_take' do 
+
     context "empty" do 
       it 'is empty for empty' do
         expect( empty_stream.lazy_take 42 ).to be_empty
@@ -11,7 +12,7 @@ describe Lab42::Stream do
     context "finite" do 
       let(:three){1..3}
       subject do
-        three.to_stream
+        finite_stream three
       end
 
       it "can take one" do
@@ -35,6 +36,7 @@ describe Lab42::Stream do
       end
     end # context "infinite"
   end # context 'lazy_take'
+
   context 'lazy_take_while (until)' do
     context "empty" do 
       it 'is empty for empty' do
@@ -45,7 +47,7 @@ describe Lab42::Stream do
     context "finite" do 
       let(:three){1..3}
       subject do
-        three.to_stream
+        finite_stream three
       end
 
       it "can take one" do

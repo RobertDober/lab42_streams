@@ -17,7 +17,7 @@ describe Lab42::Stream do
       end
 
       it "proc" do
-        expect( empty_stream.map(sendmsg(:succ)) ).to be_empty
+        expect( empty_stream.map(Lab42::Stream::Behavior.make(:succ)) ).to be_empty
       end
     end # context "empty is empty for"
 
@@ -42,7 +42,7 @@ describe Lab42::Stream do
 
   context 'Regression on end of stream' do
     subject do
-      (1..2).to_stream.map :succ
+      finite_stream(1..2).map :succ
     end
     
     it 'expands to an array' do

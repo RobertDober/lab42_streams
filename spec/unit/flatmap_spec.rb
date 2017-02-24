@@ -27,10 +27,13 @@ describe Lab42::Stream do
     end # context "basic use case"
 
     context "only streams are expanded" do 
+      let( :error ){ 
+        [ArgumentError, "flatmap can only map on streams, use flatmap_with_each to map over streams and enumerables"]
+      }
       it 'raises an error' do
         expect( ->{
-          (1..2).flatmap{|a| [a,a] }
-        }  ).to raise_error
+          finite_stream(1..2).flatmap{|a| [a,a] }
+        }  ).to raise_error(*error)
       end
     end # context "only streams are expanded"
 
@@ -38,23 +41,40 @@ describe Lab42::Stream do
       subject do
         iterate 0, :succ
       end
-      let(:expander){
-        -> (n) {
-          n.zero? ?  "zero" : (
-            n.odd? ? [n, n] : n.times.to_stream
-                    )
-        }
-
-      }
       let(:result){
         subject.flatmap_with_each expander
       }
-      
 
-      it "expands everything responding to each and copies the rest" do
-         expect( result.take 11 ).to eq ["zero", 1, 1, 0, 1, 3, 3, 0, 1, 2, 3] 
+      context "with enumerables" do
+        let :expander do
+          -> (n) {
+            n.zero? ?  "zero" : (
+              n.odd? ? [n, n] : [*0...n]
+            )
+          }
+        end
+
+        it "expands everything responding to each and copies the rest" do
+          expect( result.take 11 ).to eq ["zero", 1, 1, 0, 1, 3, 3, 0, 1, 2, 3] 
+        end
+
       end
-      
+
+      context "with enumerables and streams" do
+        let :expander do
+          -> (n) {
+            n.zero? ?  "zero" : (
+              n.odd? ? [n, n] : finite_stream(0...n)
+            )
+          }
+        end
+
+        it "expands everything responding to each and copies the rest" do
+          expect( result.take 11 ).to eq ["zero", 1, 1, 0, 1, 3, 3, 0, 1, 2, 3] 
+        end
+
+      end
+
     end # context "flatmap_with_each to the rescue"
   end # context "flatmap"
 

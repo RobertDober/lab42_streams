@@ -11,7 +11,7 @@ describe Lab42::Stream do
     context "finite" do 
       let(:three){1..3}
       subject do
-        three.to_stream
+        finite_stream three
       end
 
       it "can take one" do

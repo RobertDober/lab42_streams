@@ -22,7 +22,7 @@ describe Lab42::Stream do
         ]
       end
       it 'is ok with longer streams' do
-        expect( digits.zip( (0..10).to_stream ).entries.map(&:entries) ).to eq [
+        expect( digits.zip( finite_stream(0..10) ).entries.map(&:entries) ).to eq [
           [0,0], [1,1], [2,2], [3,3], [4,4], [5,5], [6,6], [7,7], [8,8], [9,9]
         ]
       end

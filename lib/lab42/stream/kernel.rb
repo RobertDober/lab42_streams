@@ -1,4 +1,6 @@
 require 'lab42/core/kernel'
+require_relative 'behavior'
+
 module Kernel
   def binop_streams op, stream1, stream2
     combine_streams stream1, stream2 do |e1, e2|
@@ -33,18 +35,22 @@ module Kernel
   end
 
   def finite_stream enum
-    return empty_stream if enum.empty?
     case enum
     when Range
-      cons_stream(enum.first){ finite_stream(enum.first.succ..enum.last) }
+      _finite_stream_from_range enum
     when Array
+      return empty_stream if enum.empty?
       cons_stream(enum.first){ finite_stream(enum.drop(1)) }
     when Hash
+      return empty_stream if enum.empty?
       cons_stream(enum.first){ finite_stream(enum.without(enum.first.first)) }
+    when Enumerator
+      _finite_stream_from_enumerator! enum.to_enum
     else
       raise TypeError, "cannot create a finite stream from type #{enum.class.inspect}"
     end
   end
+
 
   def flatmap stream, *args, &blk
     stream.flatmap( *args, &blk )
@@ -61,7 +67,7 @@ module Kernel
   end
 
   def merge_streams_by *streams_and_beh, &blk
-    beh = blk || streams_and_beh.pop
+    beh = Lab42::Stream::Behavior.make1( blk || streams_and_beh.pop, &blk )
     __merge_streams_by__ beh, streams_and_beh
   end
 
@@ -76,27 +82,46 @@ module Kernel
 
   def iterate_without_block args
     rest = args.drop 1
-    if Method === rest.first 
+    if rest.first && rest.first.respond_to?( :call )
       cons_stream( args.first ){ iterate( rest.first.(*([args.first] + rest.drop(1))), *rest ) }
     else
-      cons_stream( args.first ){ iterate( sendmsg(*rest).(args.first), *rest ) }
+      cons_stream( args.first ){ iterate( args.first.send(*rest), *rest ) }
     end
   end
 
-private
-def __merge_streams_by__ beh, streams
-  still_there = streams.reject( &:empty? )
-  return empty_stream if still_there.empty?
-  __merge_streams_by_with_present__ beh, still_there, streams
-end 
+  private
 
-def __merge_streams_by_with_present__ beh, still_there, streams
-  ordered_heads = still_there
-  .map( &:head )
-  .ordered_by( beh )
+  def _finite_stream_from_boundaies fst, lst
+    return empty_stream if fst > lst 
+    cons_stream(fst){ _finite_stream_from_boundaies fst.succ, lst }
+  end
 
-  cons_stream_n( *ordered_heads ){
-    __merge_streams_by__ beh, still_there.map( &:tail )
-  }
-end
+  def _finite_stream_from_enumerator! enum
+    cons_stream( enum.next ){ _finite_stream_from_enumerator! enum }
+  rescue StopIteration
+    empty_stream
+  end
+
+  def _finite_stream_from_range range
+    fst = range.first
+    lst = range.last
+    lst = lst.pred if range.exclude_end?
+    _finite_stream_from_boundaies fst, lst
+  end
+
+  def __merge_streams_by__ beh, streams
+    still_there = streams.reject( &:empty? )
+    return empty_stream if still_there.empty?
+    __merge_streams_by_with_present__ beh, still_there
+  end 
+
+  def __merge_streams_by_with_present__ beh, still_there
+    ordered_heads = still_there
+    .map( &:head )
+    .ordered_by( beh )
+
+    cons_stream_n( *ordered_heads ){
+      __merge_streams_by__ beh, still_there.map( &:tail )
+    }
+  end
 end

@@ -66,7 +66,7 @@ module Lab42
       end
 
       def lazy_take n=1
-        raise ArgumentError, "need a non negative Fixnum" if !(Fixnum === n) || n < 0
+        raise ArgumentError, "need a non negative Integer" if !(Integer === n) || n < 0
         __lazy_take__ n
       end
 
@@ -100,12 +100,12 @@ module Lab42
       end
 
       def reduce red=nil, &reducer
-        red = reducer.make_behavior( red )
+        red = Behavior.make( red, &reducer)
         tail.__inject__ head, red
       end
 
       def inject agg, *red, &reducer
-        __inject__ agg, reducer.make_behavior( *red )
+        __inject__ agg, Behavior.make( *red, &reducer )
       end
 
       def filter *args, &blk
@@ -113,7 +113,7 @@ module Lab42
       end
 
       def reject *args, &blk
-        __filter__ self, Behavior.make( *args ).not
+        __filter__ self, Behavior.make( *args, &blk ).not
       end
 
       def flatmap *args, &blk
@@ -122,6 +122,8 @@ module Lab42
 
       def __flatmap__ a_proc
         hh = a_proc.( head )
+        raise ArgumentError, "flatmap can only map on streams, use flatmap_with_each to map over streams and enumerables" unless
+          Lab42::Stream === hh
         if hh.empty?
           tail.__flatmap__ a_proc
         else
@@ -215,7 +217,7 @@ module Lab42
       end
 
       def take n=1
-        raise ArgumentError, "need a non negative Fixnum" if !(Fixnum === n) || n < 0
+        raise ArgumentError, "need a non negative Integer" if !(Integer === n) || n < 0
         x = []
         each do | ele |
           return x if n.zero?
@@ -238,8 +240,8 @@ module Lab42
       end
 
       def __zip__ streams
-        cons_stream( [head] + streams.map(:head) ){
-          tail.__zip__ streams.map(:tail)
+        cons_stream( [head] + streams.map(&:head) ){
+          tail.__zip__ streams.map(&:tail)
         }
       end
 

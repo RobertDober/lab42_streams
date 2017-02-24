@@ -159,7 +159,7 @@ Of course you can provide a block or a lambda
 
 ```ruby
     # A lambda
-    digits.reduce( Fixnum.fm.+ ).assert == 45
+    digits.reduce( Integer.fm.+ ).assert == 45
     # A block
     digits.inject(10){|a, e| a+e }.assert == 55
 ```

@@ -1,7 +1,4 @@
 require 'forwarder'
-
-require_relative 'empty/enumerable'
-
 module Lab42
   class Stream
     class Empty < Stream

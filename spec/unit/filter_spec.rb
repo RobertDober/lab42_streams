@@ -18,7 +18,7 @@ describe Lab42::Stream do
       end
 
       it "proc" do
-        expect( empty_stream.map(sendmsg(:succ)) ).to be_empty
+        expect( empty_stream.map(:succ.to_proc) ).to be_empty
       end
     end # context "empty is empty for"
 

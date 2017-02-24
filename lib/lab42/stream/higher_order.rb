@@ -1,9 +1,10 @@
+require_relative 'behavior'
 module Lab42
   class Stream
     module HigherOrder
       def combine *streams_and_op, &operation
         op = streams_and_op.pop unless self.class === streams_and_op.last
-        op = operation.make_behavior op
+        op = Behavior.make1( op, &operation )
         # TODO: Decide what to do if op.arity and streams_and_op.size.succ do not match????
         __combine__( op, *streams_and_op )
       end

@@ -27,13 +27,22 @@ module Lab42
           end 
         end
 
+        def make1(*args, &blk)
+          if blk
+            blk
+          else
+            _make_from_args( args )
+          end 
+        end
         private
 
         def _make_from_args( args )
           if args.first.respond_to?( :call )
             _curry( args )
           else
-            sendmsg( *args )
+            -> (rcv, *a) do
+              rcv.send(*(args + a))
+            end 
           end
         end
 

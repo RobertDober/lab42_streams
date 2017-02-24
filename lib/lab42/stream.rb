@@ -5,7 +5,6 @@ require_relative './stream/kernel'
 require_relative './stream/array'
 require_relative './stream/enumerable'
 require_relative './stream/higher_order'
-require_relative './stream/hash'
 require_relative './stream/proc'
 require_relative './stream/class_methods'
 require_relative './stream/utility'
@@ -31,7 +30,7 @@ module Lab42
     def combine_streams *args, &operation
       op = args.shift unless self.class === args.first
       raise ArgumentError, "Missing stream parameters" if args.empty?
-      __combine_streams__ operation.make_behavior( op ), args
+      __combine_streams__ Behavior.make( op, &operation), args
     end
 
     def drop n = 1

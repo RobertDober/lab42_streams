@@ -14,10 +14,10 @@ describe Enumerable do
 
   context 'ordered_by' do
     it 'can be ordered by block' do
-      expect( subject.ordered_by{|a,b| a.age > b.age }.map(&:name) ).to eq %W{ rob vil ang }
+      expect( subject.ordered_by(Lab42::Stream::Behavior.make{|a,b| a.age > b.age }).map(&:name) ).to eq %W{ rob vil ang }
     end
     it 'can be ordered by a symbol' do
-      expect( (1..3).ordered_by :> ).to eq [3,2,1]
+      expect( (1..3).ordered_by Lab42::Stream::Behavior.make(:>) ).to eq [3,2,1]
     end
   end # context 'ordered_by'
 end # describe Enumerable

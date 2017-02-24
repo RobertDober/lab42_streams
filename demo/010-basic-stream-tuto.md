@@ -114,4 +114,3 @@ Here is an example of a finite stream
     digits.drop(10).assert.empty?
     digits.drop(10).assert == EmptyStream
 ```
-

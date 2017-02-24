@@ -3,7 +3,7 @@ module Lab42
     module Utility
 
       def segment *args, &blk
-        __segment__ blk.make_behavior( *args )
+        __segment__  Behavior.make( *args, &blk )
       end
 
       def __segment__ beh
