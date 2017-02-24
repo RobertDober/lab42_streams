@@ -39,18 +39,15 @@ module Kernel
     when Range
       _finite_stream_from_range enum
     when Array
-      return empty_stream if enum.empty?
-      cons_stream(enum.first){ finite_stream(enum.drop(1)) }
+      _finite_stream_from_ary enum
     when Hash
-      return empty_stream if enum.empty?
-      cons_stream(enum.first){ finite_stream(enum.without(enum.first.first)) }
+      _finite_stream_from_hash enum
     when Enumerator
       _finite_stream_from_enumerator! enum.to_enum
     else
       raise TypeError, "cannot create a finite stream from type #{enum.class.inspect}"
     end
   end
-
 
   def flatmap stream, *args, &blk
     stream.flatmap( *args, &blk )
@@ -89,9 +86,19 @@ module Kernel
 
   private
 
+  def _finite_stream_from_ary ary
+      return empty_stream if ary.empty?
+      cons_stream(ary.first){ finite_stream(ary.drop(1)) }
+  end
+
   def _finite_stream_from_boundaies fst, lst
     return empty_stream if fst > lst 
     cons_stream(fst){ _finite_stream_from_boundaies fst.succ, lst }
+  end
+  
+  def _finite_stream_from_hash hsh
+      return empty_stream if hsh.empty?
+      cons_stream(hsh.first){ finite_stream(hsh.without(hsh.first.first)) }
   end
 
   def _finite_stream_from_enumerator! enum
