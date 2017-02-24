@@ -14,6 +14,10 @@ describe Lab42::Stream do
     }
     
 
+    context 'needs a stream param' do 
+      it{ expect{ digits.combine_streams }.to raise_error(ArgumentError, %r{\AMissing stream parameters}) }
+    end
+
     context 'empty' do 
       it 'combined with empty is empty' do
         expect( empty_stream.combine empty_stream, :no_such_method ).to be_empty
@@ -24,7 +28,6 @@ describe Lab42::Stream do
     end # context 'empty'
 
     context 'finite' do 
-      # TODO: Move this into an acceptance test and get rid of the isolation violation
       let(:shorter){digits.lazy_take_while :<, 5}
       
       it 'combine two streams of same length' do
