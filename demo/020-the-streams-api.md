@@ -4,7 +4,7 @@
 
 ### Minimal API
 
-There are only gour public methods to implement streams, everything else is just (important)
+There are only four public methods to implement streams, everything else is just (important)
 convenience code, building on the minimal API.
 
 #### Constructing Streams Method
