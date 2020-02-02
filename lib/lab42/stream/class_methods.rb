@@ -2,7 +2,7 @@ module Lab42
   class Stream
     module ClassMethods
       def iterate arg, beh=nil, &blk
-        beh = Behavior.make( beh, &blk)
+        beh = Behavior.make(beh, &blk)
         __iterate__ arg, beh
       end
 
