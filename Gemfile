@@ -3,7 +3,7 @@ source "https://rubygems.org"
 
 gemspec
 
-group :test do
+group :development, :test do
   gem "pry-byebug"
   gem "rspec", "~> 3.9"
   gem "simplecov"
