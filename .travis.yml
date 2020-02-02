@@ -4,16 +4,19 @@ branches:
 
 language: ruby
 rvm:
-  - "2.4.0"
-  - "2.5.0"
+  - "2.7.0"
 
-install: 
-  - bundle install
-    # Assure order of files for qed
-    #- touch demo/fordir/subdir/1
-    #- chmod 444 demo/forfile/readable
-script: 
-  - bundle exec rspec spec
-  - bundle exec qed demo
-  - CODECLIMATE_REPO_TOKEN=${CODECLIMATE_REPO_TOKEN} bundle exec codeclimate-test-reporter
+env:
+  global:
+    - CC_TEST_REPORTER_ID=7824b950791151b56826fed78036a0fa3132848f5d5e70b65ec380b995ed57f0
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - bundle exec rspec
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

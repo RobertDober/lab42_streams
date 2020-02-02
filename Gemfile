@@ -4,6 +4,8 @@ source "https://rubygems.org"
 gemspec
 
 group :test do
-    gem "simplecov"
-    gem "codeclimate-test-reporter", "~> 1.0.0"
+  gem "pry-byebug"
+  gem "rspec", "~> 3.9"
+  gem "simplecov"
+  gem "speculate_about", "~> 0.1"
 end
