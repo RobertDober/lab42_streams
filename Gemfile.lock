@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    lab42_streams (0.2.0)
-      forwarder2 (~> 0.2)
+    lab42_streams (0.3.0)
+      forwarder3 (~> 0.1)
       lab42_core (~> 0.4)
 
 GEM
@@ -13,6 +13,7 @@ GEM
     diff-lcs (1.5.1)
     docile (1.4.1)
     forwarder2 (0.2.0)
+    forwarder3 (0.1.0)
     lab42_core (0.5.1)
       forwarder2 (~> 0.2)
     method_source (1.1.0)
