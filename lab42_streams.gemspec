@@ -14,7 +14,4 @@ Gem::Specification.new do |s|
   s.licenses    = %w{MIT}
 
   s.required_ruby_version = '>= 3.3.5'
-
-  s.add_dependency 'forwarder3', '~> 0.1'
-  s.add_dependency 'lab42_core', '~> 0.4'
 end
