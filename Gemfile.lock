@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lab42_streams (0.3.0)
+    lab42_streams (0.3.1)
       forwarder3 (~> 0.1)
       lab42_core (~> 0.4)
 
