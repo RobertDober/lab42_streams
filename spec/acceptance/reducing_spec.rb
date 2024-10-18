@@ -12,9 +12,9 @@ describe Lab42::Stream do
       ).to eq( 45 )
     end
     it "raises a constraint error if it cannot reduce" do
-      expect( ->{
+      expect{
         ints.reduce_while(0.fn.>, Integer.fm.+)
-      }).to raise_error(Lab42::Stream::ConstraintError)
+      }.to raise_error(Lab42::Stream::ConstraintError)
     end
     it "can run to the end of a stream" do
       expect(

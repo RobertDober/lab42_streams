@@ -4,7 +4,7 @@ version = Lab42::Stream::Version
 Gem::Specification.new do |s|
   s.name        = 'lab42_streams'
   s.version     = version
-  s.summary     = "Streams for Ruby 2.0"
+  s.summary     = "Streams for Ruby 3.3.5"
   s.description = %{Lazy Evaluation, Streams, Enumerator#Lazy}
   s.authors     = ["Robert Dober"]
   s.email       = 'robert.dober@gmail.com'
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/RobertDober/lab42_streams"
   s.licenses    = %w{MIT}
 
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '>= 3.3.5'
 
   s.add_dependency 'forwarder2', '~> 0.2'
   s.add_dependency 'lab42_core', '~> 0.4'

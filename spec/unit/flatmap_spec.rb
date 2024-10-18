@@ -31,14 +31,14 @@ describe Lab42::Stream do
         [ArgumentError, "flatmap can only map on streams, use flatmap_with_each to map over streams and enumerables"]
       }
       it 'raises an error' do
-        expect( ->{
+        expect{
           finite_stream(1..2).flatmap{|a| [a,a] }
-        }  ).to raise_error(*error)
+        }.to raise_error(*error)
       end
       it "even in the functional form" do
-        expect( ->{
+        expect{
           flatmap(finite_stream(1..2)){|a| [a,a] }
-        }  ).to raise_error(*error)
+        }.to raise_error(*error)
         
       end
     end # context "only streams are expanded"

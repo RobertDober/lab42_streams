@@ -4,7 +4,7 @@ describe Lab42::Stream do
   context 'each_without_loops' do 
     context 'empty' do 
       it 'does nothing' do
-        expect( ->{ empty_stream.each_without_loops{ raise RuntimeError } } ).not_to raise_error
+        expect{ empty_stream.each_without_loops{ raise RuntimeError } }.not_to raise_error
       end
     end # context 'empty'
     context 'no loops anywyay' do 

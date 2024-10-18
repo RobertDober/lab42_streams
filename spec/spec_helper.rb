@@ -56,6 +56,7 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  config.raise_errors_for_deprecations!
 end
 
 # SPDX-License-Identifier: Apache-2.0
