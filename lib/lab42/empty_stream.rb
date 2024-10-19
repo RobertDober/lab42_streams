@@ -3,6 +3,9 @@
 module Lab42
   class EmptyStream < Stream
     def empty? = true
+    def head = raise StopIteration, "empty stream, headless!"
+    def tail = raise StopIteration, "empty stream, end of the journey"
+
     private
     def initialize = nil
   end

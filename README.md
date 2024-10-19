@@ -18,7 +18,7 @@ Streams are lazy, immutable lists, or for the purists, lazy cons cells (well the
 
 A first example
 
-### Context: Import the basic functions into Kernel (`cons_stream` and `the empty_stream`) and Lab42::Stream into main
+### Context: Import the basic functions into the Kernel (`cons_stream` and `the empty_stream`) and Lab42::Stream into main
 
 Given these imports
 ```ruby
@@ -31,8 +31,70 @@ Then we have access to the_empty_stream
 And to cons_stream
 ```ruby
  expect(cons_stream(1) {1}).to be_kind_of(Stream)
-    
 ```
+And we can see the difference between both
+```ruby
+    expect(the_empty_stream).to be_empty
+    expect(cons_stream(1) {1}).not_to be_empty
+```
+
+### Context: Basic operations
+
+The following simple methods on streams are already sufficent to harness their full powers
+
+Given the empty stream and the stream of integers
+```ruby
+    def integers_from(n=0) = cons_stream(n){ integers_from(n+1) }
+    let(:integers) { integers_from }
+```
+
+Then we access `head` and `tail` of the integers as follows
+```ruby
+    expect(integers.head).to eq(0)
+    expect(integers.tail).to be_a(Stream)
+    expect(integers.tail.tail.head).to eq(2)
+```
+
+And we shall be carefull about the empty stream
+```ruby
+   expect { the_empty_stream.tail }.to raise_error(StopIteration) 
+   expect { the_empty_stream.head }.to raise_error(StopIteration) 
+```
+
+And this can be used to create finite streams
+```ruby
+    binaries = cons_stream(0) { cons_stream(1, the_empty_stream) }
+    result = []
+    loop do
+      result << binaries.head
+      binaries = binaries.tail
+    end
+    expect(result).to eq([0, 1])
+```
+
+This of course cries out for ...
+
+### Context: `Enumerable`
+
+Each loops exactly as mentioned above and must therefore **not** be called
+for infinite streams, here is an example featuring our first builtin stream
+
+Then we can see that
+```ruby
+  result = nil
+  Stream.integers.each do |n|
+    break if n>42
+    result = n
+  end
+  expect(result).to eq(42)
+```
+
+And that we get all the Enumerable goodies too
+```ruby
+    expect(Stream.integers.drop(2).take(3).reduce(&:+)).to eq(9)
+```
+
+ 
 
 ### Infinite Streams
 
